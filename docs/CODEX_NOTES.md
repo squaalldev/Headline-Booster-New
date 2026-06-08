@@ -39,7 +39,7 @@ The useful visual ideas were the left sidebar, central chat area, soft brown pal
 
 ## Current status
 
-Headline Booster is now a simple Gradio app that can run with `python app.py`. It defaults to mock mode and can switch to a local Hugging Face model with `USE_REAL_MODEL=true`. It asks for only four data points when input is incomplete and returns Spanish headline options when the request is complete.
+Headline Booster is now a simple Gradio app that can run with `python app.py`. It defaults to mock mode locally, defaults to the tiny model on Hugging Face Spaces, and can switch runtime from the UI selector or with `USE_REAL_MODEL=true`. It asks for only four data points when input is incomplete and returns Spanish headline options when the request is complete.
 
 ## Next steps
 

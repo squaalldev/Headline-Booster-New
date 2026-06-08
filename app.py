@@ -97,11 +97,20 @@ STYLE_HEADLINES = {
 CUSTOM_CSS = (Path(__file__).parent / "frontend" / "styles.css").read_text(encoding="utf-8")
 
 MODEL_ID = os.getenv("MODEL_ID", "Qwen/Qwen2.5-1.5B-Instruct")
-USE_REAL_MODEL = os.getenv("USE_REAL_MODEL", "false").lower() == "true"
+MODEL_FALLBACK_ID = os.getenv("MODEL_FALLBACK_ID", "Qwen/Qwen2.5-3B-Instruct")
 REAL_MODEL_MAX_NEW_TOKENS = int(os.getenv("MAX_NEW_TOKENS", "700"))
-RUNTIME_LABEL = "real model" if USE_REAL_MODEL else "mock mode"
-MODEL_BADGE = MODEL_ID.split("/")[-1] if USE_REAL_MODEL else "small-model ready"
 TINY_TITAN_TARGET = "Qwen/Qwen2.5-1.5B-Instruct"
+MODEL_RUNTIME = "Modelo tiny (Qwen 1.5B)"
+MOCK_RUNTIME = "Mock local"
+AUTO_RUNTIME = os.getenv("USE_REAL_MODEL", "auto").lower()
+IS_HUGGING_FACE_SPACE = bool(os.getenv("SPACE_ID") or os.getenv("SPACE_HOST") or os.getenv("HF_SPACE_ID"))
+DEFAULT_RUNTIME = (
+    MODEL_RUNTIME
+    if AUTO_RUNTIME == "true" or (AUTO_RUNTIME == "auto" and IS_HUGGING_FACE_SPACE)
+    else MOCK_RUNTIME
+)
+RUNTIME_LABEL = "real model" if DEFAULT_RUNTIME == MODEL_RUNTIME else "mock mode"
+MODEL_BADGE = MODEL_ID.split("/")[-1] if DEFAULT_RUNTIME == MODEL_RUNTIME else "small-model ready"
 
 
 def _normalize(text: str) -> str:
@@ -323,12 +332,12 @@ def get_tiny_model():
 
 
 def _zerogpu_enabled(func):
-    """Applies the ZeroGPU decorator only when the real model runtime is enabled."""
-    if USE_REAL_MODEL:
+    """Applies ZeroGPU when the Space has the `spaces` package available."""
+    try:
         import spaces
-
-        return spaces.GPU(duration=90)(func)
-    return func
+    except ImportError:
+        return func
+    return spaces.GPU(duration=90)(func)
 
 
 @_zerogpu_enabled
@@ -365,11 +374,39 @@ def generate_headlines_model(user_message: str, style: str = "default") -> str:
     return generated_text
 
 
-def generate_headlines(user_message: str, style: str = "default") -> str:
+def generate_headlines(user_message: str, style: str = "default", runtime_mode: str = DEFAULT_RUNTIME) -> str:
     """Routes generation to the real tiny model or the local mock fallback."""
-    if USE_REAL_MODEL:
-        return generate_headlines_model(user_message, style)
+    if runtime_mode == MODEL_RUNTIME:
+        try:
+            return generate_headlines_model(user_message, style)
+        except ImportError as error:
+            return _model_runtime_error(
+                "Faltan dependencias del modelo tiny",
+                f"{error}",
+            )
+        except Exception as error:
+            return _model_runtime_error(
+                "No pude completar la inferencia con el modelo tiny",
+                f"{type(error).__name__}: {error}",
+            )
     return generate_headlines_mock(user_message, style)
+
+
+def _model_runtime_error(title: str, detail: str) -> str:
+    return f"""## {title}
+
+Intenté usar el runtime real con `{MODEL_ID}`, pero el modelo no respondió correctamente en este entorno.
+
+**Detalle técnico:** `{detail}`
+
+Para activar la interacción real con el modelo en Hugging Face Spaces:
+
+1. Asegúrate de tener hardware ZeroGPU o GPU disponible.
+2. Instala las dependencias de `requirements.txt`.
+3. Configura `USE_REAL_MODEL=true` o elige **Modelo tiny (Qwen 1.5B)** en la interfaz.
+4. Si necesitas más calidad, usa `MODEL_ID={MODEL_FALLBACK_ID}`.
+
+Mientras tanto puedes cambiar el selector a **Mock local** para probar el flujo sin descargar el modelo."""
 
 
 def _last_complete_user_request(history: list[dict[str, Any]]) -> str:
@@ -379,14 +416,15 @@ def _last_complete_user_request(history: list[dict[str, Any]]) -> str:
     return ""
 
 
-def chat_response(message, history):
+def chat_response(message, history, runtime_mode):
     """
     Maneja la conversación.
     Si falta información, pide solo 4 datos.
-    Si hay información suficiente, genera encabezados con el modelo configurado o fallback mock.
-    Si el usuario pide ajuste de tono, genera una nueva versión con el mismo runtime.
+    Si hay información suficiente, genera encabezados con el modelo tiny o fallback mock.
+    Si el usuario pide ajuste de tono, genera una nueva versión con el runtime elegido.
     """
     history = history or []
+    runtime_mode = runtime_mode or DEFAULT_RUNTIME
     clean_message = (message or "").strip()
     if not clean_message:
         return history, "", gr.update(visible=len(history) == 0), history
@@ -396,9 +434,9 @@ def chat_response(message, history):
     is_style_adjustment = style != "default" and previous_request and not is_request_complete(clean_message)
 
     if is_style_adjustment:
-        bot_message = generate_headlines(previous_request, style=style)
+        bot_message = generate_headlines(previous_request, style=style, runtime_mode=runtime_mode)
     elif is_request_complete(clean_message):
-        bot_message = generate_headlines(clean_message, style=style)
+        bot_message = generate_headlines(clean_message, style=style, runtime_mode=runtime_mode)
     else:
         bot_message = MISSING_INFO_MESSAGE
 
@@ -432,6 +470,12 @@ def build_app() -> gr.Blocks:
                         """
                     )
                     new_chat = gr.Button("+ Nueva conversación", elem_id="new-chat", size="lg")
+                    runtime_mode = gr.Radio(
+                        choices=[MODEL_RUNTIME, MOCK_RUNTIME],
+                        value=DEFAULT_RUNTIME,
+                        label="Runtime",
+                        elem_id="runtime-mode",
+                    )
                     gr.HTML(
                         f"""
                         <div class="signal-panel">
@@ -514,12 +558,12 @@ def build_app() -> gr.Blocks:
 
         message.submit(
             chat_response,
-            inputs=[message, chat_state],
+            inputs=[message, chat_state, runtime_mode],
             outputs=[chatbot, message, welcome, chat_state],
         )
         send.click(
             chat_response,
-            inputs=[message, chat_state],
+            inputs=[message, chat_state, runtime_mode],
             outputs=[chatbot, message, welcome, chat_state],
         )
         new_chat.click(reset_chat, outputs=[chatbot, message, welcome, chat_state])

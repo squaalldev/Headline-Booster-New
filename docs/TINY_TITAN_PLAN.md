@@ -22,13 +22,13 @@ This keeps the app under the 4B Tiny Titan target while improving output quality
 
 ## Runtime switch
 
-The app defaults to mock mode for safe local development:
+The app defaults to mock mode for safe local development, and defaults to the tiny model automatically on Hugging Face Spaces when Space environment variables are present:
 
 ```bash
 python app.py
 ```
 
-To run the real model in a Hugging Face Space, set:
+To force the real model runtime in any environment, set:
 
 ```bash
 USE_REAL_MODEL=true
@@ -50,5 +50,6 @@ Headline generation is a narrow task. The app constrains the input to four detai
 - Added model runtime configuration in `app.py`.
 - Added `build_headline_prompt` for constrained Spanish generation.
 - Added cached Hugging Face model loading.
-- Added a `generate_headlines` wrapper that chooses real model or mock fallback.
+- Added a visible Gradio runtime selector so users can choose the tiny model instead of silently staying in mock mode.
+- Added a `generate_headlines` wrapper that chooses real model or mock fallback from the UI runtime selector.
 - Added Tiny Titan dependencies in `requirements.txt`.

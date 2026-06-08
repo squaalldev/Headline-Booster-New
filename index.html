@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Headline Booster AI</title>
+  <style>
+    :root{
+      --bg:#f7f8fb;
+      --panel:#ffffff;
+      --sidebar:#ffffff;
+      --line:#e7e9ee;
+      --line-strong:#d9dde6;
+      --text:#172033;
+      --muted:#697386;
+      --soft:#f1f3f7;
+      --accent:#a8755e;
+      --accent-dark:#875741;
+      --accent-soft:#f4ebe6;
+      --success:#29c46d;
+      --danger:#e25555;
+      --shadow:0 16px 46px rgba(25,35,60,.08);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+    button,input,textarea{font:inherit}
+    .app{display:grid;grid-template-columns:320px minmax(0,1fr);min-height:100vh;background:var(--bg)}
+    .sidebar{background:var(--sidebar);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:100vh;box-shadow:6px 0 26px rgba(25,35,60,.04);z-index:2}
+    .side-head{padding:22px 18px 18px;border-bottom:1px solid var(--line)}
+    .brand{font-weight:900;font-size:23px;letter-spacing:-.04em;display:flex;align-items:baseline;gap:5px}.brand span{color:var(--accent)}
+    .new-btn{width:100%;margin-top:18px;border:0;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:white;font-weight:800;padding:15px 18px;cursor:pointer;box-shadow:0 10px 22px rgba(168,117,94,.22);transition:.18s}
+    .new-btn:hover{transform:translateY(-1px)}
+    .history{flex:1;overflow:auto}.history-title{padding:16px 18px 6px;color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+    .session{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:17px 16px;border-bottom:1px solid var(--line);cursor:pointer;background:white}.session:hover{background:#fbfbfd}.session.active{background:var(--accent-soft)}
+    .session-name{font-size:15px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:210px}.session-date{font-size:13px;color:var(--muted);margin-top:4px}.trash{border:0;background:transparent;color:#9aa2af;font-size:18px;cursor:pointer;padding:5px}.trash:hover{color:var(--danger)}
+    .side-foot{border-top:1px solid var(--line);padding:14px 18px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;gap:8px}.mini-dot{display:inline-block;width:8px;height:8px;border-radius:99px;background:var(--success);box-shadow:0 0 12px rgba(41,196,109,.5);margin-right:7px}
+
+    .main{display:flex;flex-direction:column;min-width:0;min-height:100vh}.topbar{height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:rgba(255,255,255,.72);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:1}.top-title{font-size:24px;font-weight:900;letter-spacing:-.035em}.status{font-size:15px;color:var(--muted);display:flex;align-items:center;gap:8px}.gear{font-size:24px;color:#3d4655}
+    .content{flex:1;display:flex;flex-direction:column;min-height:0}.messages{flex:1;overflow:auto;padding:26px 28px 120px;display:flex;flex-direction:column;gap:18px}.welcome{margin:auto;text-align:center;max-width:640px;padding:40px 20px}.avatar{width:176px;height:176px;border-radius:50%;background:linear-gradient(135deg,#b4846d,#744a38);display:grid;place-items:center;margin:0 auto 32px;box-shadow:var(--shadow)}.avatar-inner{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,#ffd33d,#ff7d5e 70%,#d66bf0);display:grid;place-items:center;font-size:48px}.welcome h1{margin:0;font-size:32px;letter-spacing:-.04em}.welcome p{font-size:18px;color:var(--muted);line-height:1.55;margin:12px auto 0}.chips{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}.chip{background:var(--soft);border:1px solid var(--line);border-radius:99px;padding:8px 12px;color:var(--muted);font-weight:700;font-size:13px}
+    .msg{max-width:min(860px,94%);display:flex;flex-direction:column;gap:8px}.msg.user{align-self:flex-end}.bubble{border-radius:20px;padding:16px 18px;line-height:1.55;white-space:pre-wrap}.user .bubble{background:var(--accent);color:white;border-bottom-right-radius:6px}.assistant .bubble{background:white;border:1px solid var(--line);box-shadow:0 10px 28px rgba(25,35,60,.05);border-bottom-left-radius:6px}.meta{font-size:12px;color:var(--muted);padding:0 5px}.user .meta{text-align:right}
+    .cards{display:grid;gap:14px}.card{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 10px 28px rgba(25,35,60,.05)}.card h3{margin:0 0 12px;font-size:18px;letter-spacing:-.02em}.score-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.score{background:var(--soft);border:1px solid var(--line);border-radius:13px;padding:12px}.score b{display:block;font-size:22px;margin-bottom:3px}.score span{font-size:12px;color:var(--muted);font-weight:800;text-transform:uppercase}.missing{margin:0;padding-left:20px;color:#3d4655}.versions{display:grid;gap:10px}.version{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;background:#fbfbfd;border:1px solid var(--line);border-radius:14px;padding:12px}.num{width:34px;height:34px;border-radius:50%;background:var(--accent-soft);color:var(--accent-dark);display:grid;place-items:center;font-weight:900}.winner{background:linear-gradient(135deg,var(--accent-soft),#fff);border-color:#dfc2b4}.battle{display:flex;gap:8px;flex-wrap:wrap}.battle span{background:var(--soft);border:1px solid var(--line);border-radius:99px;padding:7px 10px;color:var(--muted);font-weight:750;font-size:13px}
+    .composer-wrap{position:fixed;left:320px;right:0;bottom:0;background:linear-gradient(180deg,rgba(247,248,251,0),rgba(247,248,251,.98) 26%,rgba(247,248,251,1));padding:32px 28px 20px;border-top:1px solid rgba(231,233,238,.8)}.composer{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end}.input-box{background:#f0f1f4;border:1px solid transparent;border-radius:28px;padding:12px 18px;display:grid;gap:8px}.input-box:focus-within{background:white;border-color:var(--line-strong);box-shadow:0 0 0 4px rgba(168,117,94,.08)}textarea{width:100%;border:0;background:transparent;outline:none;resize:none;min-height:32px;max-height:116px;font-size:16px;color:var(--text)}.context{font-size:13px;border-top:1px solid #dde1e8;padding-top:8px;color:var(--muted)}.send{width:70px;height:70px;border:0;border-radius:22px;background:#cbd1db;color:#596273;font-size:32px;cursor:pointer;transition:.18s}.send.ready{background:var(--accent);color:white}.send.ready:hover{transform:translateY(-1px)}.hint{text-align:center;color:#9aa2af;font-size:13px;margin-top:12px}.error{color:var(--danger)}
+    .loading{display:inline-flex;gap:6px;align-items:center}.loading i{width:7px;height:7px;border-radius:50%;background:var(--accent);display:block;animation:bounce 1s infinite}.loading i:nth-child(2){animation-delay:.12s}.loading i:nth-child(3){animation-delay:.24s}@keyframes bounce{0%,80%,100%{transform:scale(.6);opacity:.45}40%{transform:scale(1);opacity:1}}
+    @media(max-width:850px){.app{grid-template-columns:1fr}.sidebar{display:none}.composer-wrap{left:0}.topbar{padding:0 18px}.messages{padding:20px 16px 128px}.score-grid{grid-template-columns:repeat(2,1fr)}.composer{grid-template-columns:1fr 58px}.send{width:58px;height:58px;border-radius:18px}.avatar{width:140px;height:140px}.avatar-inner{width:74px;height:74px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="side-head">
+      <div class="brand">Headline Booster <span>AI</span></div>
+      <button class="new-btn" id="newBtn">+ Nuevo titular</button>
+    </div>
+    <div class="history" id="history"><div class="history-title">Historial local</div></div>
+    <div class="side-foot"><span><span class="mini-dot"></span>Sin límite interno</span><b id="sessionCount">0</b></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="top-title">Headline Booster</div>
+      <div class="status"><span><span class="mini-dot"></span>disponible</span><span class="gear">⚙</span></div>
+    </header>
+
+    <section class="content">
+      <div class="messages" id="messages">
+        <div class="welcome" id="welcome">
+          <div class="avatar"><div class="avatar-inner">😊</div></div>
+          <h1>Headline Coach</h1>
+          <p>Pega un titular débil. El modelo pequeño lo diagnostica, crea 3 versiones mejores y elige el ganador.</p>
+          <div class="chips"><span class="chip">Diagnóstico</span><span class="chip">Mini Battle</span><span class="chip">Ganador</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="composer-wrap">
+      <form class="composer" id="form">
+        <div class="input-box">
+          <textarea id="headline" placeholder="Pega tu titular actual... Ej. Aprende Diseño Humano"></textarea>
+          <textarea class="context" id="context" placeholder="Contexto opcional: para quién es y qué resultado busca..."></textarea>
+        </div>
+        <button class="send" id="sendBtn" type="submit">→</button>
+      </form>
+      <div class="hint">Presiona Enter para enviar · Shift+Enter para nueva línea · El historial se guarda solo en este navegador</div>
+    </div>
+  </main>
+</div>
+
+<script>
+  const messages = document.getElementById('messages');
+  const welcome = document.getElementById('welcome');
+  const form = document.getElementById('form');
+  const headlineInput = document.getElementById('headline');
+  const contextInput = document.getElementById('context');
+  const sendBtn = document.getElementById('sendBtn');
+  const newBtn = document.getElementById('newBtn');
+  const historyEl = document.getElementById('history');
+  const sessionCount = document.getElementById('sessionCount');
+  const STORAGE_KEY = 'headline_booster_sessions_v1';
+  let sessions = loadSessions();
+  let currentId = null;
+
+  function loadSessions(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch{return []}}
+  function saveSessions(){localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions.slice(0,30))); renderHistory();}
+  function today(){return new Date().toLocaleDateString('es-MX',{year:'numeric',month:'numeric',day:'numeric'});}
+  function escapeHtml(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+  function scrollDown(){messages.scrollTop = messages.scrollHeight;}
+  function setReady(){sendBtn.classList.toggle('ready', headlineInput.value.trim().length>2);}
+  headlineInput.addEventListener('input', setReady);
+
+  function renderHistory(){
+    historyEl.innerHTML = '<div class="history-title">Historial local</div>';
+    sessionCount.textContent = sessions.length;
+    sessions.forEach(s=>{
+      const item = document.createElement('div');
+      item.className = 'session' + (s.id===currentId?' active':'');
+      item.innerHTML = `<div><div class="session-name">${escapeHtml(s.title)}</div><div class="session-date">${escapeHtml(s.date)}</div></div><button class="trash" title="Borrar">⌫</button>`;
+      item.addEventListener('click',()=>loadSession(s.id));
+      item.querySelector('.trash').addEventListener('click',(e)=>{e.stopPropagation(); sessions=sessions.filter(x=>x.id!==s.id); if(currentId===s.id){newSession()} saveSessions();});
+      historyEl.appendChild(item);
+    });
+  }
+
+  function newSession(){
+    currentId = null;
+    messages.innerHTML = '';
+    messages.appendChild(welcome);
+    welcome.style.display = 'block';
+    headlineInput.value=''; contextInput.value=''; setReady(); renderHistory();
+  }
+
+  function loadSession(id){
+    const s = sessions.find(x=>x.id===id); if(!s) return;
+    currentId=id; messages.innerHTML=''; welcome.style.display='none';
+    addUserMessage(s.headline, s.context, false);
+    addResultCards(s.result, false);
+    renderHistory(); scrollDown();
+  }
+
+  function addUserMessage(headline, context, animate=true){
+    welcome.style.display='none';
+    const div=document.createElement('div'); div.className='msg user';
+    div.innerHTML=`<div class="meta">Titular original</div><div class="bubble">${escapeHtml(headline)}${context?`\n\nContexto: ${escapeHtml(context)}`:''}</div>`;
+    messages.appendChild(div); if(animate) scrollDown();
+  }
+
+  function addLoading(){
+    const div=document.createElement('div'); div.className='msg assistant'; div.id='loadingMsg';
+    div.innerHTML='<div class="bubble"><span class="loading"><i></i><i></i><i></i></span> Analizando titular...</div>';
+    messages.appendChild(div); scrollDown(); return div;
+  }
+
+  function addResultCards(data, animate=true){
+    const d=data.diagnostico||{};
+    const versiones=data.versiones||[];
+    const div=document.createElement('div'); div.className='msg assistant';
+    div.innerHTML=`<div class="cards">
+      <div class="card"><h3>Diagnóstico del titular</h3><div class="score-grid">
+        <div class="score"><b>${d.claridad ?? '-'}<small>/100</small></b><span>Claridad</span></div>
+        <div class="score"><b>${d.deseo ?? '-'}<small>/100</small></b><span>Deseo</span></div>
+        <div class="score"><b>${d.especificidad ?? '-'}<small>/100</small></b><span>Especificidad</span></div>
+        <div class="score"><b>${d.diferenciacion ?? '-'}<small>/100</small></b><span>Diferenciación</span></div>
+      </div></div>
+      <div class="card"><h3>Problema principal</h3><p>${escapeHtml(data.problema_principal||'')}</p><h3>Qué le falta</h3><ul class="missing">${(data.falta||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul></div>
+      <div class="card"><h3>Versiones mejoradas</h3><div class="versions">${versiones.map((v,i)=>`<div class="version ${data.ganador_numero===i+1?'winner':''}"><div class="num">${i+1}</div><div>${escapeHtml(v)}</div></div>`).join('')}</div></div>
+      <div class="card"><h3>Mini Battle</h3><div class="battle"><span>Más claro: #1</span><span>Más emocional: #2</span><span>Más curioso: #3</span></div><h3 style="margin-top:16px">Ganador</h3><p><b>#${data.ganador_numero} — ${escapeHtml(data.ganador||'')}</b></p><p>${escapeHtml(data.por_que_gana||'')}</p></div>
+    </div>`;
+    messages.appendChild(div); if(animate) scrollDown();
+  }
+
+  async function improve(headline, context){
+    const res = await fetch('/api/improve_headline', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({headline, context})});
+    if(!res.ok) throw new Error('Error del servidor');
+    return await res.json();
+  }
+
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const headline=headlineInput.value.trim(); const context=contextInput.value.trim();
+    if(headline.length<3) return;
+    addUserMessage(headline, context);
+    const loading=addLoading();
+    headlineInput.value=''; contextInput.value=''; setReady();
+    try{
+      const result=await improve(headline, context);
+      loading.remove();
+      if(!result.ok) throw new Error(result.error||'No se pudo mejorar el titular');
+      addResultCards(result);
+      const title=headline.slice(0,34) || 'Titular';
+      const session={id:crypto.randomUUID(), title, date:today(), headline, context, result};
+      sessions=[session,...sessions.filter(s=>s.title!==title)].slice(0,30); currentId=session.id; saveSessions();
+    }catch(err){
+      loading.innerHTML=`<div class="bubble error">${escapeHtml(err.message||err)}</div>`;
+    }
+  });
+
+  headlineInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); form.requestSubmit(); }});
+  newBtn.addEventListener('click', newSession);
+  renderHistory(); setReady();
+</script>
+</body>
+</html>

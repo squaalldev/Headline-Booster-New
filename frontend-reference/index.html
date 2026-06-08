@@ -1,0 +1,1935 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Road B — The Other Screen</title>
+<!-- build: roadb-three-column-jsonsafe-confirmed-2026-06-01 -->
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="roadb-ui-version" content="sidebar-artifacts-v3-verified" />
+<link rel="icon" href="/assets/favicon.svg?v=roadb-dystopic-20260601" type="image/svg+xml">
+<link rel="shortcut icon" href="/assets/favicon.svg?v=roadb-dystopic-20260601" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#07040f;
+    --bg-1:#0d0719;
+    --bg-2:#150a2a;
+    --ink:#f4eefe;
+    --ink-dim:#b9aed1;
+    --ink-mute:#7a6f93;
+    --line:rgba(167,139,250,.14);
+    --line-strong:rgba(167,139,250,.28);
+    --surface:rgba(255,255,255,.03);
+    --surface-2:rgba(255,255,255,.05);
+    --violet-100:#e9d5ff;
+    --violet-200:#d8b4fe;
+    --violet-300:#c084fc;
+    --violet-400:#a78bfa;
+    --violet-500:#8b5cf6;
+    --violet-600:#7c3aed;
+    --amber:#fbbf24;
+    --amber-warm:#f59e0b;
+    --shadow-glow:0 0 60px rgba(167,139,250,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg-0);color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-feature-settings:"ss01","cv11"}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse 80% 50% at 80% 0%, rgba(167,139,250,.18), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 0% 100%, rgba(192,132,252,.10), transparent 60%),
+      linear-gradient(180deg,#07040f 0%, #0d0719 100%);
+    overflow-x:hidden;
+  }
+
+  /* ───── Top chrome ───── */
+  .topbar{
+    position:sticky;top:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 36px;
+    backdrop-filter:blur(14px) saturate(140%);
+    background:linear-gradient(180deg, rgba(7,4,15,.85), rgba(7,4,15,.4));
+    border-bottom:1px solid rgba(255,255,255,.04);
+  }
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-mark{
+    width:42px;height:42px;border-radius:11px;
+    background:linear-gradient(135deg,#1a0b2e,#0d0719);
+    border:1px solid var(--line-strong);
+    display:grid;place-items:center;font-weight:800;font-size:20px;
+    color:var(--violet-200);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.06), 0 0 24px rgba(167,139,250,.18);
+  }
+  .brand-mark-img{overflow:hidden;padding:0;background:rgba(7,4,15,.72)}
+  .brand-mark-img img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.38)}
+  .brand-name{font-weight:700;font-size:17px;letter-spacing:-.01em}
+  .brand-dot{font-size:11px;color:var(--ink-mute);font-weight:500;letter-spacing:.14em;text-transform:uppercase;margin-left:6px}
+
+  .topnav{display:flex;align-items:center;gap:6px;position:relative}
+  .topnav a{
+    color:var(--ink-dim);text-decoration:none;font-size:14px;font-weight:500;
+    padding:9px 14px;border-radius:9px;transition:all .2s;
+  }
+  .topnav a:hover{color:var(--ink);background:var(--surface)}
+  .topnav a.active{color:var(--ink);background:var(--surface-2)}
+  .topnav .sep{width:1px;height:18px;background:var(--line);margin:0 8px}
+
+  .pill-menu{
+    display:flex;align-items:center;gap:10px;
+    padding:9px 14px 9px 16px;border:1px solid var(--line-strong);border-radius:12px;
+    color:var(--ink);font-weight:600;font-size:14px;cursor:pointer;
+    background:var(--surface);
+    transition:all .2s;
+  }
+  .pill-menu:hover{background:var(--surface-2);border-color:rgba(167,139,250,.45)}
+  .pill-menu svg{width:16px;height:16px}
+
+  .quick-menu{
+    position:absolute;
+    right:0;
+    top:calc(100% + 12px);
+    z-index:80;
+    min-width:260px;
+    padding:10px;
+    border:1px solid var(--line-strong);
+    border-radius:14px;
+    background:rgba(13,7,25,.94);
+    backdrop-filter:blur(18px) saturate(140%);
+    box-shadow:0 24px 70px rgba(0,0,0,.42), 0 0 0 1px rgba(255,255,255,.025);
+  }
+  .quick-menu[hidden]{display:none!important}
+  .quick-menu .menu-kicker{
+    padding:6px 10px 10px;
+    color:var(--ink-mute);
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+  }
+  .quick-menu button,.quick-menu a{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:11px 12px;
+    border:0;
+    border-radius:10px;
+    background:transparent;
+    color:var(--ink-dim);
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+    font-size:13px;
+    font-weight:650;
+    text-decoration:none;
+    cursor:pointer;
+    text-align:left;
+    transition:all .16s ease;
+  }
+  .quick-menu button:hover,.quick-menu a:hover{color:var(--ink);background:rgba(167,139,250,.10)}
+  .flash-target{animation:targetFlash 1.15s ease-out}
+  @keyframes targetFlash{
+    0%{box-shadow:0 0 0 0 rgba(216,180,254,0),0 0 0 rgba(167,139,250,0)}
+    25%{box-shadow:0 0 0 4px rgba(216,180,254,.25),0 0 54px rgba(167,139,250,.24)}
+    100%{box-shadow:0 0 0 0 rgba(216,180,254,0),0 0 0 rgba(167,139,250,0)}
+  }
+
+  /* ───── HERO ───── */
+  .hero{
+    position:relative;
+    display:grid;grid-template-columns: 1fr 1.05fr;
+    gap:48px;
+    padding:64px 36px 96px 36px;
+    max-width:1480px;margin:0 auto;
+    min-height:calc(100vh - 84px);
+    align-items:center;
+  }
+  .hero-left{position:relative;z-index:2}
+
+  .chip{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:7px 14px 7px 11px;
+    border:1px solid var(--line-strong);
+    background:linear-gradient(180deg, rgba(167,139,250,.10), rgba(167,139,250,.04));
+    border-radius:999px;
+    font-size:13px;font-weight:600;color:var(--violet-200);
+  }
+  .chip .dot{width:7px;height:7px;border-radius:50%;background:var(--violet-300);box-shadow:0 0 12px var(--violet-300);animation:pulse 2.2s ease-in-out infinite}
+  .chip svg{width:13px;height:13px;opacity:.7}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+  h1.headline{
+    font-size:clamp(54px,7vw,108px);
+    line-height:.95;letter-spacing:-.035em;
+    font-weight:800;
+    margin:24px 0 0 0;
+  }
+  h1.headline .line1{display:block;color:#fff}
+  h1.headline .line2{
+    display:block;
+    background:linear-gradient(92deg,#c084fc 0%, #a78bfa 35%, #e9d5ff 70%, #c084fc 100%);
+    background-size:200% 100%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:shimmer 6s ease-in-out infinite;
+    font-style:italic;
+    font-weight:700;
+  }
+  @keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+  .div-line{
+    margin:30px 0 26px;
+    height:1px;background:linear-gradient(90deg, transparent, var(--violet-400) 30%, var(--violet-200), transparent 90%);
+    position:relative;max-width:480px;
+  }
+  .div-line::after{
+    content:"";position:absolute;right:14%;top:-2px;width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 0 18px 4px var(--violet-200);
+  }
+
+  .lede{
+    font-size:20px;line-height:1.5;color:var(--ink-dim);
+    max-width:480px;
+    font-weight:400;
+  }
+  .lede b{color:var(--violet-200);font-weight:600}
+
+  .cta-row{display:flex;align-items:center;gap:18px;margin-top:36px;flex-wrap:wrap}
+  .btn-primary{
+    position:relative;
+    display:inline-flex;align-items:center;justify-content:space-between;gap:14px;
+    padding:18px 24px 18px 26px;
+    min-width:340px;
+    border-radius:14px;border:none;cursor:pointer;
+    color:#0d0719;font-weight:700;font-size:16px;letter-spacing:-.005em;
+    background:linear-gradient(95deg,#a78bfa 0%, #c084fc 55%, #d8b4fe 100%);
+    box-shadow:0 12px 40px -10px rgba(167,139,250,.7), inset 0 1px 0 rgba(255,255,255,.4);
+    overflow:hidden;
+    transition:transform .15s, box-shadow .25s;
+  }
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 16px 50px -10px rgba(167,139,250,.85), inset 0 1px 0 rgba(255,255,255,.4)}
+  .btn-primary::before{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(110deg, transparent 35%, rgba(255,255,255,.5) 50%, transparent 65%);
+    transform:translateX(-100%);
+    animation:sweep 3.5s ease-in-out infinite;
+  }
+  @keyframes sweep{0%,40%{transform:translateX(-100%)}70%,100%{transform:translateX(100%)}}
+  .btn-primary .ico-spark{width:22px;height:22px}
+  .btn-primary .label{display:flex;align-items:center;gap:12px}
+  .btn-primary .arrow{width:18px;height:18px;opacity:.85}
+
+  .btn-ghost{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:17px 22px;border-radius:14px;
+    border:1px solid var(--line-strong);background:transparent;color:var(--ink);
+    font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;
+  }
+  .btn-ghost:hover{background:var(--surface);border-color:rgba(167,139,250,.45)}
+
+  /* feature pills under CTA */
+  .feature-row{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+    margin-top:42px;max-width:480px;
+  }
+  .feature{
+    display:flex;flex-direction:column;align-items:flex-start;gap:14px;
+  }
+  .feature .ico{
+    width:46px;height:46px;border-radius:12px;
+    background:linear-gradient(180deg, rgba(167,139,250,.14), rgba(167,139,250,.05));
+    border:1px solid var(--line-strong);
+    display:grid;place-items:center;color:var(--violet-200);
+  }
+  .feature .ico svg{width:20px;height:20px}
+  .feature .lbl{font-size:13px;font-weight:600;line-height:1.3;color:var(--ink)}
+  .feature .sub{font-size:11px;color:var(--ink-mute);margin-top:-6px}
+
+  .privacy{
+    margin-top:60px;padding-top:24px;border-top:1px solid var(--line);
+    display:flex;align-items:center;gap:10px;color:var(--ink-mute);font-size:13px;
+    max-width:480px;
+  }
+  .privacy svg{width:15px;height:15px;color:var(--violet-300)}
+
+  /* hero right side – portal image */
+  .hero-right{position:relative;height:100%;display:flex;align-items:center;justify-content:center}
+  .portal{
+    position:relative;
+    width:100%;max-width:720px;aspect-ratio:1/1.08;
+    border-radius:20px;
+    overflow:hidden;
+  }
+  .portal img{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right center;
+    transform:scale(1.18);transform-origin:65% 50%;
+    filter:saturate(1.05) contrast(1.02);
+  }
+  .portal::before{
+    /* halo */
+    content:"";position:absolute;inset:-30px;
+    background:radial-gradient(circle at 60% 50%, rgba(167,139,250,.35), transparent 55%);
+    pointer-events:none;filter:blur(20px);
+    animation:halo 7s ease-in-out infinite;
+  }
+  @keyframes halo{0%,100%{opacity:.7}50%{opacity:1}}
+  .portal::after{
+    /* edge fade */
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(ellipse at center, transparent 55%, rgba(7,4,15,.65) 100%);
+  }
+
+  /* right rail icons */
+  .rail{
+    position:absolute;right:36px;top:50%;transform:translateY(-50%);
+    display:flex;flex-direction:column;gap:14px;z-index:3;
+  }
+  .rail .tile{
+    width:78px;
+    padding:14px 8px;
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    border:1px solid var(--line-strong);
+    border-radius:14px;background:rgba(13,7,25,.55);
+    backdrop-filter:blur(10px);
+    color:var(--ink);font-size:12px;font-weight:600;
+    cursor:pointer;transition:all .2s;
+  }
+  .rail .tile:hover{background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.45);transform:translateX(-3px)}
+  .rail .tile svg{width:22px;height:22px;color:var(--violet-200)}
+
+  /* particles */
+  .particles{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1}
+  .particle{position:absolute;bottom:-10px;width:4px;height:4px;border-radius:50%;background:var(--violet-200);opacity:0;animation:rise linear infinite;box-shadow:0 0 8px var(--violet-200)}
+  @keyframes rise{
+    0%{transform:translateY(0) scale(.5);opacity:0}
+    10%{opacity:.9}
+    90%{opacity:.6}
+    100%{transform:translateY(-120vh) scale(1);opacity:0}
+  }
+
+  /* ───── APP / GRADIO PANEL ───── */
+  .app-section{
+    max-width:1600px;margin:0 auto;padding:0 32px 64px;
+    position:relative;
+  }
+  .section-tag{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:var(--ink-mute);letter-spacing:.2em;text-transform:uppercase;
+    margin-bottom:14px;
+  }
+  .section-tag::before{content:"";width:28px;height:1px;background:var(--violet-400)}
+  .section-title{
+    font-size:38px;font-weight:700;letter-spacing:-.025em;line-height:1.1;
+    margin:0 0 8px;
+  }
+  .section-title em{font-style:italic;font-weight:500;color:var(--violet-200)}
+  .section-sub{color:var(--ink-mute);font-size:15px;margin:0 0 32px;max-width:520px}
+
+  .app-shell{
+    border:1px solid var(--line-strong);
+    border-radius:24px;
+    background:linear-gradient(180deg, rgba(167,139,250,.04), rgba(7,4,15,.6));
+    box-shadow:0 40px 80px -30px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.02), inset 0 1px 0 rgba(255,255,255,.04);
+    overflow:hidden;
+  }
+
+  .app-bar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 18px;
+    border-bottom:1px solid var(--line);
+    background:rgba(7,4,15,.4);
+  }
+  .traffic{display:flex;gap:7px}
+  .traffic span{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.1)}
+  .traffic span:nth-child(1){background:#ff5f57}
+  .traffic span:nth-child(2){background:#febc2e}
+  .traffic span:nth-child(3){background:#28c840}
+  .url-pill{
+    flex:1;max-width:520px;margin:0 auto;
+    background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:9px;
+    padding:7px 14px;
+    font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-mute);
+    display:flex;align-items:center;gap:10px;
+  }
+  .url-pill svg{width:12px;height:12px;color:var(--violet-300)}
+  .url-pill .path{color:var(--ink-dim)}
+  .gradio-badge{
+    display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:var(--ink-mute);padding:6px 10px;border:1px solid var(--line);border-radius:8px;
+  }
+  .gradio-badge .dot{width:6px;height:6px;background:#22d489;border-radius:50%;box-shadow:0 0 8px #22d489}
+
+  .app-grid{display:grid;grid-template-columns:280px minmax(560px,1fr) 320px;min-height:820px}
+  .experience-grid{display:contents}
+
+  /* LEFT: setup */
+  .setup{
+    padding:24px 20px;border-right:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(167,139,250,.04), transparent);
+    display:flex;flex-direction:column;gap:22px;
+    max-height:820px;overflow-y:auto;
+  }
+  .setup::-webkit-scrollbar{width:6px}
+  .setup::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:4px}
+
+  .setup-header{display:flex;align-items:center;gap:12px}
+  .setup-header h3{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em}
+  .setup-header .avatar-stack{display:flex}
+  .setup-header .avatar-stack > div{
+    width:32px;height:32px;border-radius:50%;border:2px solid var(--bg-1);
+    background:linear-gradient(135deg,#a78bfa,#c084fc);margin-left:-8px;display:grid;place-items:center;font-weight:700;font-size:13px;color:#0d0719;
+  }
+  .setup-header .avatar-stack > div:first-child{margin-left:0;background:linear-gradient(135deg,#374151,#1f2937);color:#fff}
+
+  .field{display:flex;flex-direction:column;gap:8px}
+  .field label{
+    font-size:12px;font-weight:600;color:var(--ink-dim);
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .field label .hint{font-weight:400;color:var(--ink-mute);font-size:11px;font-family:'JetBrains Mono',monospace}
+  .field input, .field textarea, .field select{
+    width:100%;
+    padding:12px 14px;
+    background:rgba(255,255,255,.03);
+    border:1px solid var(--line-strong);
+    border-radius:10px;
+    color:var(--ink);font-family:inherit;font-size:14px;
+    transition:all .15s;
+  }
+  .field input:focus,.field textarea:focus,.field select:focus{
+    outline:none;border-color:var(--violet-400);background:rgba(167,139,250,.06);
+    box-shadow:0 0 0 3px rgba(167,139,250,.15);
+  }
+  .field textarea{resize:vertical;min-height:74px;line-height:1.5}
+  .field .helper{font-size:11px;color:var(--ink-mute);line-height:1.5}
+
+  .branch-toggle{
+    display:grid;grid-template-columns:1fr 1fr;gap:8px;
+    background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:11px;padding:5px;
+  }
+  .branch-toggle button{
+    padding:9px;background:transparent;border:none;cursor:pointer;
+    color:var(--ink-dim);font-size:12px;font-weight:600;font-family:inherit;
+    border-radius:7px;transition:all .15s;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+  }
+  .branch-toggle button.active{
+    background:linear-gradient(180deg,#a78bfa,#8b5cf6);
+    color:#0d0719;box-shadow:0 4px 12px -2px rgba(167,139,250,.6);
+  }
+  .branch-toggle button svg{width:13px;height:13px}
+
+  .slider-row{display:flex;flex-direction:column;gap:10px}
+  .slider-row .top{display:flex;justify-content:space-between;align-items:baseline}
+  .slider-row .val{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--violet-200);font-weight:600}
+  .slider-row input[type=range]{
+    -webkit-appearance:none;width:100%;height:6px;border-radius:6px;
+    background:linear-gradient(90deg, var(--violet-400) 0%, var(--violet-400) var(--p, 50%), rgba(255,255,255,.06) var(--p, 50%));
+  }
+  .slider-row input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+    background:#fff;border:3px solid var(--violet-400);box-shadow:0 0 14px rgba(167,139,250,.6);cursor:pointer;
+  }
+
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .ch{
+    padding:7px 12px;border-radius:99px;border:1px solid var(--line-strong);
+    background:rgba(255,255,255,.02);font-size:12px;font-weight:500;color:var(--ink-dim);
+    cursor:pointer;transition:all .15s;
+  }
+  .ch:hover{color:var(--ink);border-color:rgba(167,139,250,.4)}
+  .ch.on{
+    background:linear-gradient(180deg, rgba(167,139,250,.18), rgba(167,139,250,.08));
+    color:var(--violet-100);border-color:var(--violet-400);
+  }
+
+  .invoke-btn{
+    margin-top:6px;
+    padding:14px;border:none;border-radius:12px;cursor:pointer;
+    background:linear-gradient(95deg,#a78bfa 0%, #c084fc 100%);
+    color:#0d0719;font-weight:700;font-size:14px;font-family:inherit;letter-spacing:-.005em;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    box-shadow:0 10px 30px -10px rgba(167,139,250,.7);
+    transition:transform .15s, box-shadow .25s;
+    position:relative;overflow:hidden;
+  }
+  .invoke-btn:hover{transform:translateY(-1px)}
+  .invoke-btn svg{width:16px;height:16px}
+
+  .badge-row{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--ink-mute);font-family:'JetBrains Mono',monospace}
+  .badge-row svg{width:11px;height:11px;color:var(--violet-300)}
+
+  /* RIGHT: chat */
+  .chat{display:flex;flex-direction:column;height:820px;min-width:0}
+  .chat-head{
+    padding:18px 24px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .chat-head .who{display:flex;align-items:center;gap:14px}
+  .who-avatar{
+    position:relative;width:48px;height:48px;border-radius:50%;
+    background:conic-gradient(from 0deg, #a78bfa, #c084fc, #e9d5ff, #a78bfa);
+    padding:2px;
+  }
+  .who-avatar .inner{
+    width:100%;height:100%;border-radius:50%;background:#0d0719;
+    display:grid;place-items:center;font-weight:800;color:var(--violet-200);font-size:18px;
+  }
+  .who-avatar::after{content:"";position:absolute;inset:-3px;border-radius:50%;background:inherit;filter:blur(8px);opacity:.5;z-index:-1;animation:halo 4s ease-in-out infinite}
+  .who-info .name{font-size:15px;font-weight:700}
+  .who-info .name em{color:var(--violet-200);font-style:normal;font-weight:600}
+  .who-info .status{font-size:12px;color:var(--ink-mute);display:flex;align-items:center;gap:6px;margin-top:2px}
+  .who-info .status .dot{width:6px;height:6px;border-radius:50%;background:#22d489;box-shadow:0 0 8px #22d489;animation:pulse 2s infinite}
+
+  .chat-tools{display:flex;gap:6px}
+  .icon-btn{
+    width:34px;height:34px;border-radius:9px;background:transparent;
+    border:1px solid var(--line);color:var(--ink-dim);cursor:pointer;
+    display:grid;place-items:center;transition:all .15s;
+  }
+  .icon-btn:hover{background:var(--surface);color:var(--ink)}
+  .icon-btn svg{width:15px;height:15px}
+
+  .messages{
+    flex:1;overflow-y:auto;padding:28px 28px 10px;
+    display:flex;flex-direction:column;gap:18px;
+  }
+  .messages::-webkit-scrollbar{width:6px}
+  .messages::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:4px}
+
+  .msg{display:flex;gap:12px;max-width:86%}
+  .msg .av{
+    flex-shrink:0;width:34px;height:34px;border-radius:50%;
+    display:grid;place-items:center;font-weight:700;font-size:13px;
+  }
+  .msg .bubble{
+    padding:13px 16px;border-radius:14px;font-size:14.5px;line-height:1.55;
+  }
+  .msg .meta{font-size:11px;color:var(--ink-mute);margin-top:6px;font-family:'JetBrains Mono',monospace;letter-spacing:.05em}
+
+  .msg.them .av{background:linear-gradient(135deg,#1f2937,#0f172a);color:#fff;border:1px solid var(--line)}
+  .msg.them .bubble{
+    background:rgba(255,255,255,.04);border:1px solid var(--line);
+    color:var(--ink);
+    border-top-left-radius:4px;
+  }
+
+  .msg.you{align-self:flex-end;flex-direction:row-reverse}
+  .msg.you .av{background:linear-gradient(135deg,#a78bfa,#c084fc);color:#0d0719}
+  .msg.you .bubble{
+    background:linear-gradient(135deg, rgba(167,139,250,.18), rgba(192,132,252,.10));
+    border:1px solid rgba(167,139,250,.35);
+    color:var(--ink);
+    border-top-right-radius:4px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  .msg.you .meta{text-align:right}
+
+  .msg.other-self .av{
+    background:conic-gradient(from 0deg, #a78bfa, #c084fc, #e9d5ff, #a78bfa);
+    color:#0d0719;position:relative;
+  }
+  .msg.other-self .av::after{content:"";position:absolute;inset:-2px;border-radius:50%;background:inherit;filter:blur(6px);opacity:.5;z-index:-1}
+  .msg.other-self .bubble{
+    background:
+      linear-gradient(135deg, rgba(167,139,250,.12), rgba(192,132,252,.04)),
+      radial-gradient(120% 100% at 0% 0%, rgba(167,139,250,.20), transparent 50%);
+    border:1px solid rgba(167,139,250,.30);
+    color:var(--ink);
+    border-top-left-radius:4px;
+    position:relative;
+  }
+  .msg.other-self .bubble::before{
+    content:"";position:absolute;left:-1px;top:-1px;bottom:-1px;width:3px;
+    background:linear-gradient(180deg,#a78bfa,#c084fc);
+    border-radius:14px 0 0 14px;
+  }
+
+  .typing{display:flex;gap:5px;align-items:center;padding:8px 0}
+  .typing span{width:6px;height:6px;border-radius:50%;background:var(--violet-300);animation:typing 1.3s infinite ease-in-out}
+  .typing span:nth-child(2){animation-delay:.15s}
+  .typing span:nth-child(3){animation-delay:.3s}
+  @keyframes typing{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+
+  .insight-card{
+    margin:10px 0;padding:14px 16px;border-radius:12px;
+    background:linear-gradient(135deg, rgba(251,191,36,.08), rgba(167,139,250,.04));
+    border:1px solid rgba(251,191,36,.22);
+    display:flex;gap:12px;align-items:flex-start;
+    max-width:78%;align-self:flex-start;margin-left:46px;
+  }
+  .insight-card .ic{
+    width:28px;height:28px;border-radius:8px;background:rgba(251,191,36,.15);
+    display:grid;place-items:center;flex-shrink:0;color:var(--amber);
+  }
+  .insight-card .ic svg{width:14px;height:14px}
+  .insight-card .title{font-size:11px;font-weight:700;color:var(--amber);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
+  .insight-card .text{font-size:13px;color:var(--ink-dim);line-height:1.55}
+
+  /* composer */
+  .composer-wrap{padding:16px 24px 22px;border-top:1px solid var(--line);background:rgba(7,4,15,.4)}
+  .quick-prompts{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+  .qp{
+    padding:8px 13px;border-radius:99px;border:1px solid var(--line);
+    background:rgba(255,255,255,.02);font-size:12.5px;color:var(--ink-dim);
+    cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:6px;
+  }
+  .qp:hover{border-color:rgba(167,139,250,.4);color:var(--ink);background:rgba(167,139,250,.06)}
+  .qp svg{width:12px;height:12px;opacity:.7}
+
+  .composer{
+    position:relative;
+    border:1px solid var(--line-strong);border-radius:16px;
+    background:rgba(255,255,255,.03);
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .composer:focus-within{border-color:var(--violet-400);box-shadow:0 0 0 4px rgba(167,139,250,.10)}
+  .composer textarea{
+    width:100%;min-height:62px;max-height:140px;resize:none;
+    border:none;background:transparent;outline:none;
+    color:var(--ink);font-family:inherit;font-size:14.5px;line-height:1.5;
+    padding:16px 96px 16px 18px;
+  }
+  .composer .actions{
+    position:absolute;right:10px;bottom:10px;display:flex;align-items:center;gap:6px;
+  }
+  .composer .actions .util{
+    width:32px;height:32px;border-radius:9px;background:transparent;border:none;
+    color:var(--ink-mute);cursor:pointer;display:grid;place-items:center;
+  }
+  .composer .actions .util:hover{background:var(--surface-2);color:var(--ink)}
+  .composer .actions .util svg{width:15px;height:15px}
+  .send-btn{
+    height:38px;padding:0 16px;border-radius:10px;border:none;cursor:pointer;
+    background:linear-gradient(95deg,#a78bfa 0%, #c084fc 100%);
+    color:#0d0719;font-weight:700;font-size:13px;font-family:inherit;
+    display:flex;align-items:center;gap:8px;
+    box-shadow:0 6px 18px -6px rgba(167,139,250,.7);
+  }
+  .send-btn svg{width:14px;height:14px}
+
+  .composer-foot{
+    display:flex;justify-content:space-between;align-items:center;margin-top:12px;
+    font-size:11px;color:var(--ink-mute);font-family:'JetBrains Mono',monospace;
+  }
+  .composer-foot .lf{display:flex;gap:14px}
+  .composer-foot kbd{
+    border:1px solid var(--line);background:rgba(255,255,255,.04);padding:2px 6px;border-radius:5px;
+    font-family:inherit;font-size:10px;color:var(--ink-dim);
+  }
+
+
+  /* Echo artifacts and visible souvenir side chamber */
+  .signal-side{
+    border-left:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(167,139,250,.045), rgba(7,4,15,.32));
+    padding:18px;
+    min-height:820px;
+    max-height:820px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .signal-side::-webkit-scrollbar{width:6px}
+  .signal-side::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:4px}
+  .side-card{
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:rgba(255,255,255,.028);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.035);
+    padding:15px;
+  }
+  .side-kicker{
+    font-family:'JetBrains Mono',monospace;
+    color:var(--violet-300);
+    font-size:10px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:7px;
+  }
+  .side-title{font-size:15px;font-weight:800;letter-spacing:-.015em;color:var(--ink);margin-bottom:6px}
+  .side-copy{font-size:12.5px;line-height:1.55;color:var(--ink-mute)}
+  .signal-meter{margin-top:12px;height:9px;border-radius:999px;background:rgba(255,255,255,.055);overflow:hidden;border:1px solid rgba(255,255,255,.05)}
+  .signal-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#22d489,#a78bfa,#fbbf24);box-shadow:0 0 18px rgba(167,139,250,.45);transition:width .4s ease}
+  .echo-count{display:flex;align-items:center;justify-content:space-between;margin-top:9px;color:var(--ink-dim);font-family:'JetBrains Mono',monospace;font-size:11px}
+  .artifact-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
+  .artifact-btn{
+    width:100%;min-height:46px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);
+    background:rgba(255,255,255,.025);color:var(--ink-dim);font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+    font-size:12.5px;font-weight:750;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;transition:all .18s ease;
+  }
+  .artifact-btn span:first-child{display:flex;flex-direction:column;gap:3px}
+  .artifact-btn small{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-mute)}
+  .artifact-btn:hover:not(:disabled){transform:translateY(-1px);color:var(--ink);border-color:rgba(167,139,250,.45);background:rgba(167,139,250,.08)}
+  .artifact-btn.collected{color:var(--violet-100);border-color:rgba(34,212,137,.45);background:linear-gradient(180deg, rgba(34,212,137,.10), rgba(167,139,250,.04))}
+  .artifact-btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+  .artifact-arrow{font-family:'JetBrains Mono',monospace;color:var(--violet-200)}
+  .final-btn{
+    width:100%;min-height:58px;margin-top:10px;border-radius:14px;border:1px solid var(--line-strong);cursor:pointer;
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:850;color:var(--ink-dim);
+    background:linear-gradient(95deg, rgba(167,139,250,.13), rgba(251,191,36,.06));
+    transition:all .18s ease;
+  }
+  .final-btn.unlocked{color:#0d0719;border:none;background:linear-gradient(95deg,#a78bfa 0%,#c084fc 55%,#fbbf24 100%);box-shadow:0 14px 34px -15px rgba(251,191,36,.9)}
+  .artifact-card{margin:10px 0 10px 46px;max-width:82%;padding:15px 16px;border-radius:14px;border:1px solid rgba(167,139,250,.30);background:linear-gradient(135deg, rgba(167,139,250,.13), rgba(192,132,252,.04)),radial-gradient(120% 100% at 0% 0%, rgba(251,191,36,.09), transparent 55%);box-shadow:inset 3px 0 0 rgba(167,139,250,.75);align-self:flex-start}
+  .artifact-card .artifact-kicker{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin-bottom:5px}
+  .artifact-card .artifact-title{color:var(--ink);font-size:15px;font-weight:800;margin-bottom:8px}
+  .artifact-card .artifact-body{color:var(--ink-dim);font-size:13.5px;line-height:1.6}
+  .artifact-card ul{margin:10px 0 0 18px;padding:0;color:var(--violet-100);font-size:12.5px;line-height:1.55}
+  .artifact-card li{margin:4px 0}
+  .souvenir-preview{position:relative;min-height:206px;border-radius:18px;padding:18px;overflow:hidden;background:radial-gradient(circle at 82% 14%,rgba(251,191,36,.18),transparent 30%),radial-gradient(circle at 20% 20%,rgba(167,139,250,.28),transparent 44%),linear-gradient(145deg,#07040f,#190a31 62%,#27133e);border:1px solid rgba(216,180,254,.30);box-shadow:0 20px 60px -34px rgba(167,139,250,.9)}
+  .souvenir-preview::after{content:"";position:absolute;inset:12px;border:1px solid rgba(255,255,255,.08);border-radius:14px;pointer-events:none}
+  .souvenir-stamp{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute);position:relative;z-index:1}
+  .souvenir-title{position:relative;z-index:1;margin:20px 0 8px;font-size:28px;line-height:1.02;letter-spacing:-.035em;font-weight:900;background:linear-gradient(92deg,#a78bfa,#c084fc,#fbbf24);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .souvenir-line{position:relative;z-index:1;color:var(--ink);font-size:14px;line-height:1.45;min-height:58px}
+  .souvenir-ledger{position:relative;z-index:1;display:grid;grid-template-columns:1fr;gap:7px;margin-top:14px;font-size:11.5px;color:var(--ink-dim)}
+  .souvenir-ledger b{color:var(--violet-200);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:600}
+  .download-card-btn{
+    position:sticky;bottom:0;z-index:3;
+    width:100%;min-height:54px;border:0;border-radius:14px;cursor:pointer;
+    background:linear-gradient(95deg,#a78bfa,#c084fc 58%,#fbbf24);
+    color:#0d0719;font-weight:900;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:14px;
+    box-shadow:0 14px 32px -13px rgba(167,139,250,.85),0 -18px 36px rgba(7,4,15,.82);display:flex;align-items:center;justify-content:center;gap:10px;
+  }
+  .download-card-btn:disabled{opacity:.58;cursor:not-allowed;filter:grayscale(.35)}
+
+  /* gallery strip - hero alt screens */
+  .gallery{
+    max-width:1480px;margin:0 auto;padding:0 36px 120px;
+  }
+  .gal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:24px}
+  .gal-card{
+    border:1px solid var(--line);border-radius:18px;overflow:hidden;
+    background:linear-gradient(180deg, rgba(167,139,250,.05), transparent);
+    transition:all .25s;cursor:pointer;
+  }
+  .gal-card:hover{border-color:rgba(167,139,250,.4);transform:translateY(-3px)}
+  .gal-vis{aspect-ratio:16/10;position:relative;overflow:hidden;background:#0d0719}
+  .gal-vis svg{position:absolute;inset:0;width:100%;height:100%}
+  .gal-body{padding:18px}
+  .gal-body h4{margin:0 0 6px;font-size:15px;font-weight:700;letter-spacing:-.01em}
+  .gal-body p{margin:0;font-size:13px;color:var(--ink-mute);line-height:1.5}
+  .gal-tag{
+    display:inline-flex;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--violet-300);
+    letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px;
+  }
+
+  /* footer */
+  footer{
+    border-top:1px solid var(--line);padding:32px 36px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:12.5px;color:var(--ink-mute);
+    max-width:1480px;margin:0 auto;
+  }
+  footer .ft-links{display:flex;gap:22px}
+  footer a{color:var(--ink-mute);text-decoration:none}
+  footer a:hover{color:var(--ink)}
+
+  @media (max-width:1240px){
+    .app-grid{grid-template-columns:260px minmax(0,1fr)}
+    .experience-grid{display:contents}
+    .signal-side{grid-column:1 / -1;border-left:none;border-top:1px solid var(--line);max-height:none;padding:14px}
+  }
+
+  @media (max-width:1060px){
+    .experience-grid{display:contents}
+    .signal-side{grid-column:1 / -1;border-left:none;border-top:1px solid var(--line);max-height:none;min-height:auto}
+    .artifact-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+
+  @media (max-width:980px){
+    .hero{grid-template-columns:1fr;padding-top:32px}
+    .hero-right{display:flex;min-height:520px;order:2}
+    .portal{max-width:680px;width:100%}
+    .rail{position:static;transform:none;flex-direction:row;justify-content:flex-start;margin-top:32px}
+    .app-grid{grid-template-columns:1fr}
+    .experience-grid{display:contents}
+    .setup{border-right:none;border-bottom:1px solid var(--line);max-height:none}
+    .signal-side{grid-column:auto;border-left:none;border-top:1px solid var(--line);max-height:none}
+    .gal-grid{grid-template-columns:1fr}
+  }
+
+  @media (max-width:720px){
+    .artifact-grid{grid-template-columns:1fr}
+    .composer-foot{flex-direction:column;align-items:flex-start;gap:8px}
+  }
+
+
+  .msg.system-note .bubble{
+    background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);color:var(--ink-dim);
+  }
+  .msg.error-note .bubble{
+    background:rgba(244,63,94,.10);border:1px solid rgba(244,63,94,.35);color:#ffe3ea;
+  }
+  .signal-pill{
+    display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--violet-200);background:rgba(167,139,250,.07);
+  }
+  .signal-pill::before{content:"";width:7px;height:7px;border-radius:50%;background:#22d489;box-shadow:0 0 10px #22d489;}
+  .is-busy .who-avatar::after{animation:halo 1.2s ease-in-out infinite;opacity:.9}
+  .is-busy .gradio-badge .dot{background:#fbbf24;box-shadow:0 0 8px #fbbf24}
+  .field select option{background:#0d0719;color:#f4eefe}
+  .invoke-btn[disabled], .send-btn[disabled], .btn-primary[disabled], .artifact-btn[disabled], .final-btn[disabled]{opacity:.62;cursor:not-allowed;transform:none}
+  .composer textarea::placeholder, .field textarea::placeholder{color:rgba(185,174,209,.55)}
+  .download-anchor{display:none}
+
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark brand-mark-img"><img src="/assets/favicon.svg?v=roadb-dystopic-20260601" alt="Road B logo"></div>
+    <div>
+      <div style="display:flex;align-items:center">
+        <span class="brand-name">Road B</span>
+        <span class="brand-dot">v0.7 · gradio</span>
+      </div>
+    </div>
+  </div>
+  <nav class="topnav" aria-label="Road B navigation">
+    <a href="#home" class="active" data-nav="home">The Other Screen</a>
+    <a href="#app" data-nav="journal">Journal</a>
+    <a href="#companions" data-nav="pathways">Pathways</a>
+    <a href="#about" data-nav="about">About</a>
+    <span class="sep"></span>
+    <button class="pill-menu" id="menuBtn" type="button" aria-expanded="false" aria-controls="quickMenu">
+      Menu
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+    </button>
+    <div class="quick-menu" id="quickMenu" hidden>
+      <div class="menu-kicker">Signal controls</div>
+      <button type="button" data-menu-action="start">Start a session <span>↘</span></button>
+      <button type="button" data-menu-action="sample">Try sample fork <span>↘</span></button>
+      <button type="button" data-menu-action="reflect">Open Reflect room <span>✧</span></button>
+      <button type="button" data-menu-action="trace">Export live trace <span>⌁</span></button>
+      <a href="/samples/public_trace_sample.json" target="_blank" rel="noopener">Open public trace <span>↗</span></a>
+      <a href="/docs/FIELD_NOTES.md" target="_blank" rel="noopener">Read field notes <span>↗</span></a>
+    </div>
+  </nav>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="particles" id="particles"></div>
+
+  <div class="hero-left">
+    <span class="chip">
+      <span class="dot"></span> Road B
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
+    </span>
+
+    <h1 class="headline">
+      <span class="line1">The Other</span>
+      <span class="line2">Screen</span>
+    </h1>
+
+    <div class="div-line"></div>
+
+    <p class="lede">
+      Talk to the fictional version of yourself who <b>chose differently</b>.
+      Cross the threshold, meet your other path, and bring back what you find.
+    </p>
+
+    <div class="cta-row">
+      <button class="btn-primary" id="startBtn" type="button">
+        <span class="label">
+          <svg class="ico-spark" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8L12 2zM19 14l.9 2.5L22 17.5l-2.1.9L19 21l-.9-2.6L16 17.5l2.1-1L19 14z"/></svg>
+          Start the Conversation
+        </span>
+        <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+      <button class="btn-ghost" id="sampleBtn" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M10 8l6 4-6 4V8z" fill="currentColor"/></svg>
+        Try sample fork
+      </button>
+    </div>
+
+    <div class="feature-row">
+      <div class="feature">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 1 1-3.5-6.9L21 4l-1 4-4-.5"/></svg></div>
+        <div class="lbl">Meaningful<br/>Conversations</div>
+      </div>
+      <div class="feature">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></div>
+        <div class="lbl">Alternate<br/>Perspectives</div>
+      </div>
+      <div class="feature">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" fill="currentColor"/></svg></div>
+        <div class="lbl">New<br/>Possibilities</div>
+      </div>
+    </div>
+
+    <div class="privacy">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3z"/></svg>
+      No third-party AI API. Qwen runs inside this Space runtime.
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="portal">
+      <img src="/assets/hero-reference.png" alt="The Other Screen portal"/>
+    </div>
+  </div>
+
+  <div class="rail">
+    <div class="tile" data-lens="reflect">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 3L18 7l-4 1 4 1 1 4 1-4 4-1-4-1-1-4z" transform="translate(-2 -1) scale(.85)"/><path d="M8 13l1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3z"/></svg>
+      Reflect
+    </div>
+    <div class="tile" data-lens="discover">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M16 8l-2 6-6 2 2-6 6-2z"/></svg>
+      Discover
+    </div>
+    <div class="tile" data-lens="grow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12"/><path d="M12 12c0-4 2-6 6-6 0 4-2 6-6 6z" fill="currentColor" fill-opacity=".25"/><path d="M12 14c0-3-2-5-5-5 0 3 2 5 5 5z" fill="currentColor" fill-opacity=".25"/></svg>
+      Grow
+    </div>
+  </div>
+</section>
+
+<!-- THE APP (gradio-style) -->
+<section class="app-section" id="app">
+  <div class="section-tag">› the experience · 02</div>
+  <h2 class="section-title">Step through, and meet <em>the other you</em>.</h2>
+  <p class="section-sub">Configure a fork in your past. The model invokes that alternate self, fully grounded in your description, and converses in their voice — informed by where that path could have led.</p>
+
+  <div class="app-shell">
+    <div class="app-bar">
+      <div class="traffic"><span></span><span></span><span></span></div>
+      <div class="url-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.5.5L21 10a5 5 0 00-7-7l-2 2"/><path d="M14 11a5 5 0 00-7.5-.5L3 14a5 5 0 007 7l2-2"/></svg>
+        roadb.app <span class="path" id="sessionPath">/session/not-opened — <b style="color:var(--violet-200)">strict AI</b></span>
+      </div>
+      <div class="gradio-badge"><span class="dot"></span> gradio · qwen</div>
+    </div>
+
+    <div class="app-grid">
+      <!-- SETUP -->
+      <aside class="setup">
+        <div class="setup-header">
+          <div class="avatar-stack"><div>Y</div><div>B</div></div>
+          <h3>Set up the fork</h3>
+        </div>
+
+        <div class="field">
+          <label>The decision <span class="hint">required</span></label>
+          <textarea id="decision">In 2018, I turned down a job offer in Berlin to stay in Tokyo and finish my PhD. I have wondered ever since.</textarea>
+          <div class="helper">The single hinge. The model will branch your timeline from this point.</div>
+        </div>
+
+        <div class="field">
+          <label>What did <em>they</em> do instead?</label>
+          <div class="branch-toggle" id="branchToggle">
+            <button class="active" data-v="took"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12l5 5L20 7"/></svg> Took it</button>
+            <button data-v="custom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Different</button>
+          </div>
+          <textarea id="branchDetail" placeholder="Describe the road they took instead.">They took the Berlin job.</textarea>
+          <div class="helper">This gives Qwen a concrete Road B, instead of asking it to guess the other path.</div>
+        </div>
+
+        <div class="field">
+          <label>Their current self <span class="hint">8 years on</span></label>
+          <textarea id="curself">Lives in Kreuzberg. Senior staff engineer at a climate-tech startup. Married a chef they met at a co-working space. Plays bass on Sundays.</textarea>
+        </div>
+
+        <div class="field slider-row">
+          <div class="top"><label style="margin:0">Divergence</label><span class="val" id="divVal">0.62</span></div>
+          <input type="range" min="0" max="1" step="0.01" value="0.62" id="divRange" />
+          <div class="helper">How far their life drifted from yours. Higher = stranger to you.</div>
+        </div>
+
+        <div class="field slider-row">
+          <div class="top"><label style="margin:0">Honesty</label><span class="val" id="honVal">0.84</span></div>
+          <input type="range" min="0" max="1" step="0.01" value="0.84" id="honRange" />
+          <div class="helper">How candid they are about regret and joy.</div>
+        </div>
+
+        <div class="field">
+          <label>Tone</label>
+          <div class="chips" id="tones">
+            <div class="ch on">Warm</div>
+            <div class="ch">Wry</div>
+            <div class="ch on">Reflective</div>
+            <div class="ch">Direct</div>
+            <div class="ch">Tender</div>
+            <div class="ch">Wistful</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Memory window</label>
+          <select id="memoryWindow">
+            <option>Continuous (this session)</option>
+            <option>Across all sessions</option>
+            <option>Forget after each turn</option>
+          </select>
+        </div>
+
+        <button class="invoke-btn" id="invokeBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8L12 2z"/></svg>
+          Invoke the other self
+        </button>
+
+        <div class="badge-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3z"/></svg>
+          Strict AI · Qwen3.5-9B GGUF · no mock fallback
+        </div>
+      </aside>
+
+      <div class="experience-grid"><!-- display:contents; chat and signal-side are true app-grid columns -->
+      <!-- CHAT -->
+      <div class="chat">
+        <div class="chat-head">
+          <div class="who">
+            <div class="who-avatar"><div class="inner">Y</div></div>
+            <div class="who-info">
+              <div class="name" id="otherName">You<em>@RoadB</em></div>
+              <div class="status"><span class="dot"></span> waiting at the threshold</div>
+            </div>
+          </div>
+          <div class="chat-tools">
+            <button class="icon-btn" title="Save card" id="saveBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21V8l-5-5H5v18z"/><path d="M14 3v5h5"/></svg></button>
+            <button class="icon-btn" title="Copy share text" id="shareBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button>
+            <button class="icon-btn" title="Export trace" id="exportBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg></button>
+          </div>
+        </div>
+
+        <div class="messages" id="messages">
+          <div class="insight-card" id="emptyState">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L9 9H3l5 4-2 7 6-4 6 4-2-7 5-4h-6z"/></svg></div>
+            <div>
+              <div class="title">THE ROOM IS QUIET</div>
+              <div class="text">Set up a fork, then invoke the other self. This panel stays empty until Qwen generates the first live transmission.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="composer-wrap">
+          <div class="quick-prompts">
+            <div class="qp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12c0 5-4 9-9 9s-9-4-9-9 4-9 9-9c2 0 4 .5 5.5 1.5"/><path d="M21 4v5h-5"/></svg> Ask about a regret</div>
+            <div class="qp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> A typical Tuesday</div>
+            <div class="qp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V8"/><path d="M5 12c0-4 3-7 7-7s7 3 7 7"/></svg> One thing you learned</div>
+            <div class="qp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M12 3l9 9-9 9"/></svg> Advice to me</div>
+          </div>
+
+          <div class="composer">
+            <textarea id="composerInput" placeholder="Say something to your other self…"></textarea>
+            <div class="actions">
+              <button class="send-btn" id="sendBtn" type="button">
+                Send
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="composer-foot">
+            <div class="lf">
+              <span><kbd>⏎</kbd> send</span>
+              <span><kbd>⇧</kbd> + <kbd>⏎</kbd> newline</span>
+              <span><kbd>⌘</kbd> + <kbd>K</kbd> reflect</span>
+            </div>
+            <div>roadb · strict AI · Qwen GGUF · llama.cpp</div>
+          </div>
+        </div>
+
+      </div>
+
+      <aside class="signal-side" aria-label="Road B Echo Artifacts and Souvenir Card">
+        <div class="side-card">
+          <div class="side-kicker">signal chamber</div>
+          <div class="side-title">Collect 3 Echo Artifacts</div>
+          <div class="side-copy">Generated by Qwen from this session. Collect three echoes to unlock the final transmission.</div>
+          <div class="signal-meter"><div class="signal-fill" id="signalFill"></div></div>
+          <div class="echo-count"><span id="signalText">Signal 0%</span><span id="echoText">Echoes 0 / 3</span></div>
+        </div>
+
+        <div class="side-card">
+          <div class="side-kicker">echo artifacts</div>
+          <div class="artifact-grid">
+            <button class="artifact-btn" type="button" data-artifact="cost_ledger"><span><small>loss</small>Open the Cost Ledger</span><span class="artifact-arrow">›</span></button>
+            <button class="artifact-btn" type="button" data-artifact="beauty_ledger"><span><small>beauty</small>Open the Beauty Ledger</span><span class="artifact-arrow">›</span></button>
+            <button class="artifact-btn" type="button" data-artifact="typical_tuesday"><span><small>ordinary</small>Visit a Tuesday</span><span class="artifact-arrow">›</span></button>
+            <button class="artifact-btn" type="button" data-artifact="unsent_letter"><span><small>letter</small>Read the Unsent Letter</span><span class="artifact-arrow">›</span></button>
+            <button class="artifact-btn" type="button" data-artifact="split_moment"><span><small>origin</small>Return to the Split</span><span class="artifact-arrow">›</span></button>
+          </div>
+          <button class="final-btn" type="button" id="finalBtn" disabled>Final Transmission locked · collect 3 echoes</button>
+        </div>
+
+        <div class="side-card">
+          <div class="side-kicker">souvenir card</div>
+          <div class="souvenir-preview" id="souvenirPreview">
+            <div class="souvenir-stamp" id="souvenirStamp">ROAD B // waiting</div>
+            <div class="souvenir-title" id="souvenirTitle">No Signal Yet</div>
+            <div class="souvenir-line" id="souvenirLine">Invoke Road B, collect echoes, then save a card that belongs to this exact alternate path.</div>
+            <div class="souvenir-ledger">
+              <div><b>Gift</b><br><span id="souvenirGift">waiting for Qwen</span></div>
+              <div><b>Cost</b><br><span id="souvenirCost">waiting for signal</span></div>
+            </div>
+          </div>
+        </div>
+
+        <button class="download-card-btn" type="button" id="downloadCardBtn" disabled>↓ Download Souvenir Card</button>
+      </aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY: three companion screens -->
+<section class="gallery" id="companions">
+  <div class="section-tag">› companions · 03</div>
+  <h2 class="section-title">After the threshold, three rooms.</h2>
+  <p class="section-sub">Where the conversation lives once it ends.</p>
+
+  <div class="gal-grid">
+    <div class="gal-card" data-lens="reflect">
+      <div class="gal-vis">
+        <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <radialGradient id="g1" cx=".5" cy=".5"><stop offset="0" stop-color="#c084fc" stop-opacity=".6"/><stop offset="1" stop-color="#0d0719" stop-opacity="0"/></radialGradient>
+            <linearGradient id="g1b" x1="0" x2="1"><stop offset="0" stop-color="#a78bfa" stop-opacity=".7"/><stop offset="1" stop-color="#a78bfa" stop-opacity="0"/></linearGradient>
+          </defs>
+          <rect width="400" height="250" fill="#0d0719"/>
+          <circle cx="200" cy="125" r="110" fill="url(#g1)"/>
+          <g stroke="url(#g1b)" stroke-width="1.4" fill="none" opacity=".7">
+            <path d="M40 200 Q 150 80 360 60"/>
+            <path d="M40 220 Q 180 120 360 100"/>
+            <path d="M40 180 Q 120 50 360 30"/>
+          </g>
+          <g fill="#fff">
+            <circle cx="80" cy="186" r="2.5"/>
+            <circle cx="320" cy="48" r="3"/>
+            <circle cx="220" cy="118" r="2"/>
+          </g>
+        </svg>
+      </div>
+      <div class="gal-body">
+        <div class="gal-tag">› journal</div>
+        <h4>Reflect</h4>
+        <p>The model surfaces what your other self said most — the pulls, the regrets, the things they were proud of — and offers it back as a prompt.</p>
+      </div>
+    </div>
+
+    <div class="gal-card" data-lens="discover">
+      <div class="gal-vis">
+        <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="g2" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#a78bfa" stop-opacity=".6"/><stop offset="1" stop-color="#c084fc" stop-opacity=".0"/></linearGradient>
+          </defs>
+          <rect width="400" height="250" fill="#0d0719"/>
+          <g fill="none" stroke="#a78bfa" stroke-width="1.2" opacity=".55">
+            <circle cx="200" cy="125" r="40"/>
+            <circle cx="200" cy="125" r="70"/>
+            <circle cx="200" cy="125" r="100"/>
+          </g>
+          <g fill="#c084fc">
+            <circle cx="200" cy="85" r="6"/>
+            <circle cx="270" cy="125" r="5"/>
+            <circle cx="200" cy="165" r="5"/>
+            <circle cx="130" cy="125" r="5"/>
+            <circle cx="100" cy="55" r="3.5" opacity=".6"/>
+            <circle cx="320" cy="195" r="3.5" opacity=".6"/>
+          </g>
+          <g stroke="url(#g2)" stroke-width="1.6">
+            <line x1="200" y1="85" x2="270" y2="125"/>
+            <line x1="270" y1="125" x2="200" y2="165"/>
+            <line x1="200" y1="165" x2="130" y2="125"/>
+            <line x1="130" y1="125" x2="200" y2="85"/>
+            <line x1="200" y1="125" x2="100" y2="55"/>
+            <line x1="200" y1="125" x2="320" y2="195"/>
+          </g>
+        </svg>
+      </div>
+      <div class="gal-body">
+        <div class="gal-tag">› map</div>
+        <h4>Discover</h4>
+        <p>Branch by branch, the lives you might have lived. Pin the ones that ring true and the model will weave them into one ongoing dialogue.</p>
+      </div>
+    </div>
+
+    <div class="gal-card" data-lens="grow">
+      <div class="gal-vis">
+        <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="250" fill="#0d0719"/>
+          <g stroke="#a78bfa" stroke-width="1.2" fill="none" opacity=".5">
+            <path d="M200 230 Q 200 150 200 80"/>
+            <path d="M200 180 Q 160 160 130 130"/>
+            <path d="M200 180 Q 240 160 270 130"/>
+            <path d="M200 130 Q 170 110 150 80"/>
+            <path d="M200 130 Q 230 110 250 80"/>
+          </g>
+          <g fill="#c084fc">
+            <circle cx="200" cy="80" r="7"/>
+            <circle cx="130" cy="130" r="5"/>
+            <circle cx="270" cy="130" r="5"/>
+            <circle cx="150" cy="80" r="4"/>
+            <circle cx="250" cy="80" r="4"/>
+            <circle cx="200" cy="230" r="6" fill="#fbbf24"/>
+          </g>
+        </svg>
+      </div>
+      <div class="gal-body">
+        <div class="gal-tag">› growth</div>
+        <h4>Grow</h4>
+        <p>Tiny commitments rooted in what you learned. The other you said it; this is where you decide what to do with it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="about">
+  <div>© Road B 2026 — built with Gradio Server, Qwen GGUF, and llama.cpp. No third-party AI API.</div>
+  <div class="ft-links">
+    <a href="/samples/public_trace_sample.json" target="_blank" rel="noopener">Open trace</a>
+    <a href="/docs/FIELD_NOTES.md" target="_blank" rel="noopener">Field notes</a>
+    <a href="#app">Start again</a>
+  </div>
+</footer>
+
+<script type="module">
+  import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
+
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+
+  let client = null;
+  let stateJson = "";
+  let currentState = null;
+  let branchMode = "took";
+  let lastCardText = "";
+
+  function escapeHtml(s){
+    return String(s ?? "").replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
+
+  function looksLikeRawJson(value){
+    const text = String(value ?? '').trim();
+    return text.startsWith('{') && text.includes(':') && text.includes('"');
+  }
+
+  function humanText(value, candidates=[]){
+    const preferred = ['opening_line','answer','body','final_message','last_line','souvenir_line','insight','question_back','daily_scene','identity_line','gift','cost','title'];
+    const keys = [...candidates, ...preferred].filter((v, i, a) => v && a.indexOf(v) === i);
+
+    if(value === null || value === undefined) return '';
+
+    if(typeof value === 'object'){
+      for(const key of keys){
+        if(value[key] && !looksLikeRawJson(value[key])) return String(value[key]).trim();
+      }
+      for(const key of Object.keys(value)){
+        const item = value[key];
+        if(typeof item === 'string' && item.trim() && !looksLikeRawJson(item)) return item.trim();
+      }
+      return '';
+    }
+
+    const text = String(value).trim();
+    if(!text) return '';
+
+    if(looksLikeRawJson(text)){
+      const cleaned = text.replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'').trim();
+      try{
+        const parsed = JSON.parse(cleaned);
+        for(const key of keys){
+          if(parsed[key] && !looksLikeRawJson(parsed[key])) return String(parsed[key]).trim();
+        }
+      }catch(e){
+        for(const key of keys){
+          const rx = new RegExp('"' + key + '"\\s*:\\s*"((?:\\\\.|[^"\\\\])*)"', 's');
+          const match = cleaned.match(rx);
+          if(match && match[1]){
+            return match[1].replace(/\\n/g, '\n').replace(/\\"/g, '"').trim();
+          }
+        }
+      }
+      return 'The signal arrived, but the words broke in the crossing. Try one smaller question.';
+    }
+    return text;
+  }
+
+
+
+  function displayText(value, fallback=''){
+    const text = humanText(value, ['opening_line','answer','body','final_message','last_line','souvenir_line','insight','question_back','daily_scene','identity_line','gift','cost','title']);
+    if(text && !looksLikeRawJson(text)) return text;
+    const fb = humanText(fallback, ['opening_line','answer','body','final_message','last_line','souvenir_line']);
+    return fb || '';
+  }
+
+  function prose(s){
+    return escapeHtml(humanText(s, ['answer','opening_line','body','final_message','last_line','souvenir_line'])).replace(/\n/g, "<br>");
+  }
+
+  function normalizeResult(result){
+    if(result && Array.isArray(result.data)){
+      return result.data.length === 1 ? result.data[0] : result.data;
+    }
+    return result && result.data !== undefined ? result.data : result;
+  }
+
+  function setStatus(text, busy=false){
+    const badge = $('.gradio-badge');
+    if(badge) badge.innerHTML = `<span class="dot"></span> ${escapeHtml(text)}`;
+    document.body.classList.toggle('is-busy', !!busy);
+  }
+
+  function setBusy(busy){
+    ['#invokeBtn','#sendBtn','#saveBtn','#shareBtn','#exportBtn','#downloadCardBtn','#finalBtn'].forEach(id => {
+      const el = $(id);
+      if(el) el.disabled = !!busy;
+    });
+    document.querySelectorAll('[data-artifact]').forEach(btn => {
+      if(busy) btn.disabled = true;
+      else updateSidePanel();
+    });
+  }
+
+  async function getClient(){
+    if(client) return client;
+    setStatus('connecting', true);
+    client = await Client.connect(window.location.origin, { events: ['data','status'] });
+    try{
+      const boot = normalizeResult(await client.predict('/boot_runtime', {}));
+      if(boot?.runtime){
+        setStatus(boot.runtime.model_loaded ? 'qwen loaded' : 'qwen ready');
+      }else{
+        setStatus('qwen ready');
+      }
+    }catch(e){
+      setStatus('frontend ready');
+    }
+    return client;
+  }
+
+  function clearMessages(){
+    const host = $('#messages');
+    host.innerHTML = '';
+  }
+
+  function scrollMessages(){
+    const host = $('#messages');
+    host.scrollTop = host.scrollHeight;
+  }
+
+  function appendMessage(kind, text, meta=''){
+    const host = $('#messages');
+    const cls = kind === 'you' ? 'you' : (kind === 'error' ? 'them error-note' : (kind === 'system' ? 'them system-note' : 'other-self'));
+    const avatar = kind === 'you' ? 'Y' : (currentState?.profile?.other_name?.charAt(0) || 'B');
+    const div = document.createElement('div');
+    div.className = `msg ${cls}`;
+    div.innerHTML = `
+      <div class="av">${escapeHtml(avatar)}</div>
+      <div>
+        <div class="bubble">${prose(text)}</div>
+        <div class="meta">${escapeHtml(meta || metaLine(kind))}</div>
+      </div>`;
+    host.appendChild(div);
+    scrollMessages();
+    return div;
+  }
+
+  function appendInsight(title, body, mode='insight'){
+    if(!body && !title) return;
+    const host = $('#messages');
+    const div = document.createElement('div');
+    div.className = 'insight-card';
+    div.innerHTML = `
+      <div class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L9 9H3l5 4-2 7 6-4 6 4-2-7 5-4h-6z"/></svg></div>
+      <div>
+        <div class="title">${escapeHtml(displayText(title || mode, mode).toUpperCase())}</div>
+        <div class="text">${prose(displayText(body, ''))}</div>
+      </div>`;
+    host.appendChild(div);
+    scrollMessages();
+  }
+
+  function showTyping(label='Qwen is tuning the signal...'){
+    const host = $('#messages');
+    const div = document.createElement('div');
+    div.className = 'msg other-self typing-row';
+    div.innerHTML = `
+      <div class="av">B</div>
+      <div>
+        <div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div>
+        <div class="meta">${escapeHtml(label)}</div>
+      </div>`;
+    host.appendChild(div);
+    scrollMessages();
+    return div;
+  }
+
+  function removeTyping(){
+    $$('.typing-row').forEach(x => x.remove());
+  }
+
+  function metaLine(kind){
+    if(kind === 'you') return 'YOU · now';
+    if(kind === 'system') return 'ROADB · system';
+    return `${currentState?.profile?.other_name || 'YOU@ROADB'} · ${currentState?.session_label || 'echo'}`;
+  }
+
+  function activeTones(){
+    return $$('#tones .ch.on').map(x => x.textContent.trim()).filter(Boolean);
+  }
+
+  function branchText(){
+    const detail = $('#branchDetail')?.value?.trim() || '';
+    const decision = $('#decision')?.value?.trim() || '';
+    if(detail) return detail;
+    if(branchMode === 'custom') return 'They chose a different version of the fork described by the user. Infer the contrast from the decision and current-self details.';
+    return 'They took the path that the user did not take, branching from this decision: ' + decision;
+  }
+
+  function inputPayload(){
+    return {
+      decision: $('#decision')?.value || '',
+      branch: branchText(),
+      current_self: $('#curself')?.value || '',
+      divergence: Number($('#divRange')?.value || 0.62),
+      honesty: Number($('#honRange')?.value || 0.84),
+      tones: activeTones(),
+      memory_window: $('#memoryWindow')?.value || 'Continuous (this session)'
+    };
+  }
+
+
+  function artifactTypesCollected(){
+    const artifacts = currentState?.artifacts || [];
+    return new Set(artifacts.map(a => a.type).filter(Boolean));
+  }
+
+  function updateSidePanel(){
+    const signal = Number(currentState?.signal || 0);
+    const artifacts = currentState?.artifacts || [];
+    const count = artifacts.length;
+    const fill = $('#signalFill');
+    if(fill) fill.style.width = Math.max(0, Math.min(100, signal)) + '%';
+    const signalText = $('#signalText');
+    if(signalText) signalText.textContent = `Signal ${signal || 0}%`;
+    const echoText = $('#echoText');
+    if(echoText) echoText.textContent = `Echoes ${Math.min(count,3)} / 3`;
+
+    const collected = artifactTypesCollected();
+    document.querySelectorAll('[data-artifact]').forEach(btn => {
+      const done = collected.has(btn.dataset.artifact);
+      btn.classList.toggle('collected', done);
+      btn.disabled = !stateJson || done;
+      const arrow = btn.querySelector('.artifact-arrow');
+      if(arrow) arrow.textContent = done ? '✓' : '›';
+    });
+
+    const finalBtn = $('#finalBtn');
+    if(finalBtn){
+      const unlocked = !!stateJson && count >= 3;
+      finalBtn.disabled = !unlocked;
+      finalBtn.classList.toggle('unlocked', unlocked);
+      finalBtn.textContent = unlocked ? 'Receive Final Transmission' : `Final Transmission locked · ${Math.max(0,3-count)} echo${Math.max(0,3-count) === 1 ? '' : 'es'} left`;
+    }
+
+    const downloadBtn = $('#downloadCardBtn');
+    if(downloadBtn) downloadBtn.disabled = !currentState;
+
+    const stamp = $('#souvenirStamp');
+    const title = $('#souvenirTitle');
+    const line = $('#souvenirLine');
+    const gift = $('#souvenirGift');
+    const cost = $('#souvenirCost');
+    const latestArtifact = artifacts[artifacts.length - 1] || null;
+    const final = currentState?.final || null;
+
+    if(!currentState){
+      if(stamp) stamp.textContent = 'ROAD B // waiting';
+      if(title) title.textContent = 'No Signal Yet';
+      if(line) line.textContent = 'Invoke Road B, collect echoes, then save a card that belongs to this exact alternate path.';
+      if(gift) gift.textContent = 'waiting for Qwen';
+      if(cost) cost.textContent = 'waiting for signal';
+      return;
+    }
+
+    const cardLine = humanText(
+      final?.last_line || final?.final_message || latestArtifact?.souvenir_line || latestArtifact?.body || lastCardText || currentState.opening?.souvenir_line || currentState.opening?.opening_line,
+      ['last_line','final_message','souvenir_line','body','opening_line']
+    );
+
+    if(stamp) stamp.textContent = `ROAD B // ${currentState.session_label || 'signal'} // ${count} echoes`;
+    if(title) title.textContent = currentState.universe_id || 'Road B';
+    if(line) line.textContent = cardLine || 'The other road was never a verdict.';
+    if(gift) gift.textContent = humanText(final?.gift || currentState.profile?.gift || 'a different weather', ['gift']);
+    if(cost) cost.textContent = humanText(final?.cost || currentState.profile?.cost || 'a different absence', ['cost']);
+  }
+
+  function renderArtifactCard(data){
+    const artifact = data.artifact || data;
+    const lines = Array.isArray(artifact.lines) && artifact.lines.length
+      ? `<ul>${artifact.lines.map(x => `<li>${escapeHtml(humanText(x))}</li>`).join('')}</ul>`
+      : '';
+    const host = $('#messages');
+    const div = document.createElement('div');
+    div.className = 'artifact-card';
+    div.innerHTML = `
+      <div class="artifact-kicker">${escapeHtml(artifact.kicker || artifact.label || 'ECHO ARTIFACT')}</div>
+      <div class="artifact-title">${escapeHtml(humanText(artifact.title || 'Echo Artifact', ['title']))}</div>
+      <div class="artifact-body">${prose(displayText(artifact.body, ''))}</div>
+      ${lines}
+    `;
+    host.appendChild(div);
+    if(artifact.question_back) appendMessage('other', artifact.question_back, `${currentState?.profile?.other_name || 'Road B'} · question back`);
+    scrollMessages();
+  }
+
+  async function openArtifact(artifactType){
+    if(!stateJson){
+      appendMessage('system', 'Invoke Road B first. Echo Artifacts need an active signal.', 'ROADB · waiting');
+      return;
+    }
+    if(artifactTypesCollected().has(artifactType)) return;
+    showTyping('opening echo artifact...');
+    setBusy(true);
+    setStatus('opening echo', true);
+    try{
+      const app = await getClient();
+      const data = normalizeResult(await app.predict('/open_artifact', { state_json: stateJson, artifact_type: artifactType }));
+      removeTyping();
+      if(!data?.ok) return handleError(data);
+      updateChrome(data);
+      renderArtifactCard(data);
+      lastCardText = humanText(data.souvenir_line || data.artifact?.souvenir_line || data.artifact?.body || lastCardText, ['souvenir_line','body']);
+      updateSidePanel();
+      setStatus(`signal ${data.signal || currentState?.signal || 0}%`);
+    }catch(e){
+      handleError(e);
+    }finally{
+      setBusy(false);
+      updateSidePanel();
+    }
+  }
+
+  function updateChrome(data){
+    currentState = data.state || currentState;
+    stateJson = data.state_json || stateJson;
+    const path = $('#sessionPath');
+    if(path){
+      path.innerHTML = `/session/${escapeHtml(data.session_label || currentState?.session_label || 'echo')} — talking to <b style="color:var(--violet-200)">${escapeHtml(data.other_name || currentState?.profile?.other_name || 'You@RoadB')}</b>`;
+    }
+    const name = $('#otherName');
+    if(name){
+      const raw = data.other_name || currentState?.profile?.other_name || 'You@RoadB';
+      const pieces = String(raw).split('@');
+      name.innerHTML = `${escapeHtml(pieces[0] || 'You')}<em>@${escapeHtml(pieces[1] || 'RoadB')}</em>`;
+    }
+    const status = $('.who-info .status');
+    if(status){
+      status.innerHTML = `<span class="dot"></span> in the room · signal ${escapeHtml(data.signal ?? currentState?.signal ?? '??')}%`;
+    }
+    lastCardText = humanText(data.souvenir_line || data.last_line || currentState?.opening?.souvenir_line || lastCardText, ['souvenir_line','last_line']);
+    updateSidePanel();
+  }
+
+  function handleError(dataOrError){
+    removeTyping();
+    const msg = dataOrError?.error || dataOrError?.message || String(dataOrError || 'Unknown error');
+    appendMessage('error', msg, 'ROADB · model unavailable');
+    setStatus('error');
+  }
+
+  async function invokeOtherSelf(){
+    setBusy(true);
+    clearMessages();
+    showTyping('tuning the glass...');
+    setStatus('tuning qwen', true);
+    try{
+      const app = await getClient();
+      const data = normalizeResult(await app.predict('/invoke_road_b', inputPayload()));
+      removeTyping();
+      if(!data?.ok) return handleError(data);
+      updateChrome(data);
+      appendMessage('other', humanText(data.opening_line, ['opening_line']) || 'The signal opened, but the first words were faint.');
+      if(data.daily_scene) appendMessage('system', humanText(data.daily_scene, ['daily_scene']), `${data.universe_id || 'Road B'} · daily scene`);
+      appendInsight(data.insight_title || 'A SIGNAL WORTH KEEPING', humanText(data.insight || data.identity_line || '', ['insight','identity_line']));
+      if(data.question_back) appendMessage('other', humanText(data.question_back, ['question_back']), `${data.other_name || 'Road B'} · question back`);
+      setStatus(`signal ${data.signal || currentState?.signal || 0}%`);
+    }catch(e){
+      handleError(e);
+    }finally{
+      setBusy(false);
+    }
+  }
+
+  async function sendQuestion(){
+    const input = $('#composerInput');
+    const question = input?.value?.trim() || '';
+    if(!question) return;
+    if(!stateJson){
+      appendMessage('system', 'Invoke the other self first. The screen needs a Road B signal before it can answer.', 'ROADB · waiting');
+      return;
+    }
+    input.value = '';
+    appendMessage('you', question);
+    showTyping('other self is composing...');
+    setBusy(true);
+    setStatus('composing', true);
+    try{
+      const app = await getClient();
+      const data = normalizeResult(await app.predict('/ask_other_self', { state_json: stateJson, question }));
+      removeTyping();
+      if(!data?.ok) return handleError(data);
+      updateChrome(data);
+      appendMessage('other', humanText(data.answer, ['answer']) || 'The signal answered without words.');
+      if(data.insight || data.insight_title) appendInsight(data.insight_title || 'A SIGNAL WORTH KEEPING', humanText(data.insight || '', ['insight']));
+      if(data.question_back) appendMessage('other', humanText(data.question_back, ['question_back']), `${currentState?.profile?.other_name || 'Road B'} · question back`);
+      setStatus(`signal ${data.signal || currentState?.signal || 0}%`);
+    }catch(e){
+      handleError(e);
+    }finally{
+      setBusy(false);
+    }
+  }
+
+  async function openLens(mode){
+    if(!stateJson){
+      document.getElementById('app').scrollIntoView({behavior:'smooth'});
+      appendMessage('system', `Invoke Road B first, then the ${mode} room can open.`, 'ROADB · waiting');
+      return;
+    }
+    showTyping(`opening ${mode} room...`);
+    setBusy(true);
+    setStatus(`${mode} room`, true);
+    try{
+      const app = await getClient();
+      const data = normalizeResult(await app.predict('/open_lens', { state_json: stateJson, mode }));
+      removeTyping();
+      if(!data?.ok) return handleError(data);
+      updateChrome(data);
+      appendInsight(humanText(data.title || mode, ['title']), humanText(data.body || '', ['body']));
+      if(data.lines && data.lines.length){
+        appendMessage('system', data.lines.map(x => '• ' + x).join('\n'), `${mode.toUpperCase()} · fragments`);
+      }
+      setStatus(`signal ${data.signal || currentState?.signal || 0}%`);
+    }catch(e){
+      handleError(e);
+    }finally{
+      setBusy(false);
+    }
+  }
+
+  async function closeWithFinal(){
+    if(!stateJson){
+      appendMessage('system', 'Invoke Road B first. A final transmission needs an active signal.', 'ROADB · waiting');
+      return;
+    }
+    showTyping('receiving final transmission...');
+    setBusy(true);
+    setStatus('final signal', true);
+    try{
+      const app = await getClient();
+      const data = normalizeResult(await app.predict('/final_transmission', { state_json: stateJson }));
+      removeTyping();
+      if(!data?.ok) return handleError(data);
+      updateChrome(data);
+      appendMessage('other', humanText(data.final_message || data.last_line, ['final_message','last_line']) || 'The screen dims.');
+      appendInsight(data.title || 'FINAL TRANSMISSION', `Gift: ${data.gift || 'unknown'}\nCost: ${data.cost || 'unknown'}\n${data.last_line || ''}`);
+      lastCardText = humanText(data.last_line || data.final_message || lastCardText, ['last_line','final_message']);
+      updateSidePanel();
+      setStatus(`signal ${data.signal || currentState?.signal || 0}%`);
+    }catch(e){
+      handleError(e);
+    }finally{
+      setBusy(false);
+    }
+  }
+
+  function download(filename, text, type='application/json'){
+    const blob = new Blob([text], {type});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function exportTrace(){
+    if(!currentState){
+      appendMessage('system', 'No trace yet. Invoke Road B first.', 'ROADB · waiting');
+      return;
+    }
+    download(`roadb-${currentState.session_label || 'trace'}.json`, JSON.stringify(currentState, null, 2));
+  }
+
+  function cardData(){
+    const artifacts = currentState?.artifacts || [];
+    const latestArtifact = artifacts[artifacts.length - 1] || null;
+    const final = currentState?.final || null;
+    return {
+      title: currentState?.universe_id || 'Road B',
+      line: humanText(final?.last_line || final?.final_message || latestArtifact?.souvenir_line || latestArtifact?.body || lastCardText || currentState?.opening?.souvenir_line || currentState?.opening?.opening_line || 'The other road was never a verdict.', ['last_line','final_message','souvenir_line','body','opening_line']).slice(0,180),
+      gift: humanText(final?.gift || currentState?.profile?.gift || 'a different weather', ['gift']).slice(0,90),
+      cost: humanText(final?.cost || currentState?.profile?.cost || 'a different absence', ['cost']).slice(0,90),
+      echoes: artifacts.map(a => humanText(a.label || a.title || a.type)).filter(Boolean).slice(0,5).join(' · ') || 'opening signal'
+    };
+  }
+
+  function saveCard(){
+    if(!currentState){
+      appendMessage('system', 'No card yet. Invoke Road B first.', 'ROADB · waiting');
+      return;
+    }
+    const card = cardData();
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+      <defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#07040f"/><stop offset="1" stop-color="#231044"/></linearGradient><linearGradient id="t" x1="0" x2="1"><stop stop-color="#a78bfa"/><stop offset=".55" stop-color="#c084fc"/><stop offset="1" stop-color="#fbbf24"/></linearGradient></defs>
+      <rect width="1200" height="675" fill="url(#g)"/>
+      <circle cx="930" cy="170" r="240" fill="#8b5cf6" opacity=".18"/>
+      <circle cx="1000" cy="560" r="180" fill="#fbbf24" opacity=".10"/>
+      <rect x="70" y="70" width="1060" height="535" rx="34" fill="rgba(255,255,255,.04)" stroke="rgba(216,180,254,.35)"/>
+      <text x="110" y="135" font-family="JetBrains Mono, monospace" font-size="24" fill="#b9aed1">ROAD B // ${escapeHtml(currentState.session_label || 'signal')} // ${escapeHtml(card.echoes)}</text>
+      <text x="110" y="230" font-family="Plus Jakarta Sans, Arial" font-size="70" font-weight="800" fill="url(#t)">${escapeHtml(card.title)}</text>
+      <foreignObject x="110" y="270" width="940" height="150"><div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Plus Jakarta Sans,Arial;color:#f4eefe;font-size:34px;line-height:1.25">${escapeHtml(card.line)}</div></foreignObject>
+      <text x="110" y="485" font-family="Plus Jakarta Sans, Arial" font-size="28" fill="#d8b4fe">Gift: ${escapeHtml(card.gift)}</text>
+      <text x="110" y="540" font-family="Plus Jakarta Sans, Arial" font-size="28" fill="#fbbf24">Cost: ${escapeHtml(card.cost)}</text>
+      <text x="110" y="595" font-family="JetBrains Mono, monospace" font-size="20" fill="#7a6f93">generated by Qwen GGUF via llama.cpp</text>
+    </svg>`;
+    download(`roadb-card-${currentState.session_label || 'signal'}.svg`, svg, 'image/svg+xml');
+  }
+
+  async function shareText(){
+    const text = currentState ? `Road B ${currentState.universe_id}: ${humanText(lastCardText || currentState.opening?.souvenir_line || 'I opened the other screen.', ['souvenir_line'])}` : 'Road B: The Other Screen';
+    try{
+      await navigator.clipboard.writeText(text);
+      setStatus('copied');
+    }catch(e){
+      download('roadb-share.txt', text, 'text/plain');
+    }
+  }
+
+  function loadExample(){
+    $('#decision').value = 'In 2018, I turned down a job offer in Berlin to stay in Tokyo and finish my PhD. I have wondered ever since.';
+    $('#branchDetail').value = 'They took the Berlin job.';
+    $('#curself').value = 'Lives in Kreuzberg. Senior staff engineer at a climate-tech startup. Married a chef they met at a co-working space. Plays bass on Sundays.';
+    $('#divRange').value = '0.62'; $('#honRange').value = '0.84';
+    updateRange($('#divRange'), $('#divVal'));
+    updateRange($('#honRange'), $('#honVal'));
+    $$('#tones .ch').forEach(ch => ch.classList.toggle('on', ['Warm','Reflective','Tender'].includes(ch.textContent.trim())));
+    const took = $('#branchToggle button[data-v="took"]');
+    $$('#branchToggle button').forEach(x => x.classList.remove('active'));
+    if(took) took.classList.add('active');
+    branchMode = 'took';
+    const input = $('#composerInput');
+    if(input){ input.value = 'What did you give up that I still have?'; input.focus(); }
+    document.getElementById('app').scrollIntoView({behavior:'smooth'});
+    setStatus('sample fork loaded');
+  }
+
+  // particle field in the hero
+  (function(){
+    const host = document.getElementById('particles');
+    const N = 36;
+    for(let i=0;i<N;i++){
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const left = Math.random()*100;
+      const dur  = 8 + Math.random()*14;
+      const delay= -Math.random()*dur;
+      const size = 1 + Math.random()*3;
+      p.style.left = left + '%';
+      p.style.width = size + 'px';
+      p.style.height = size + 'px';
+      p.style.animationDuration = dur + 's';
+      p.style.animationDelay = delay + 's';
+      p.style.opacity = (0.3 + Math.random()*0.7).toFixed(2);
+      host.appendChild(p);
+    }
+  })();
+
+  function updateRange(r, v){
+    if(!r || !v) return;
+    r.style.setProperty('--p', (Number(r.value)*100) + '%');
+    v.textContent = Number(r.value).toFixed(2);
+  }
+  function bindRange(id, valId){
+    const r = document.getElementById(id);
+    const v = document.getElementById(valId);
+    const upd = () => updateRange(r, v);
+    r.addEventListener('input', upd);
+    upd();
+  }
+  bindRange('divRange','divVal');
+  bindRange('honRange','honVal');
+
+  document.querySelectorAll('#branchToggle button').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      document.querySelectorAll('#branchToggle button').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      branchMode = b.dataset.v || 'took';
+    });
+  });
+
+  document.querySelectorAll('#tones .ch').forEach(c=>{
+    c.addEventListener('click', ()=>c.classList.toggle('on'));
+  });
+
+  document.querySelectorAll('.qp').forEach(q=>{
+    q.addEventListener('click', ()=>{
+      const ta = document.querySelector('#composerInput');
+      ta.value = q.textContent.trim();
+      ta.focus();
+    });
+  });
+
+  function smoothTo(selector){
+    const el = document.querySelector(selector);
+    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  function flashTarget(selector){
+    const el = document.querySelector(selector);
+    if(!el) return;
+    el.classList.remove('flash-target');
+    void el.offsetWidth;
+    el.classList.add('flash-target');
+    setTimeout(() => el.classList.remove('flash-target'), 1250);
+  }
+
+  function markActiveNav(name){
+    $$('.topnav a[data-nav]').forEach(a => a.classList.toggle('active', a.dataset.nav === name));
+  }
+
+  function closeQuickMenu(){
+    const menu = $('#quickMenu');
+    const btn = $('#menuBtn');
+    if(menu) menu.hidden = true;
+    if(btn) btn.setAttribute('aria-expanded', 'false');
+  }
+
+  function toggleQuickMenu(){
+    const menu = $('#quickMenu');
+    const btn = $('#menuBtn');
+    if(!menu || !btn) return;
+    const nextOpen = menu.hidden;
+    menu.hidden = !nextOpen;
+    btn.setAttribute('aria-expanded', String(nextOpen));
+  }
+
+  function focusComposerWith(text){
+    const input = $('#composerInput');
+    if(!input) return;
+    if(text) input.value = text;
+    input.focus();
+  }
+
+  $$('.topnav a[data-nav]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const nav = link.dataset.nav;
+      markActiveNav(nav);
+      closeQuickMenu();
+      if(nav === 'home') smoothTo('#home');
+      if(nav === 'journal'){
+        smoothTo('#app');
+        focusComposerWith('What should I write down from this conversation before the signal fades?');
+        flashTarget('.app-shell');
+      }
+      if(nav === 'pathways'){
+        smoothTo('#companions');
+        flashTarget('.gal-grid');
+      }
+      if(nav === 'about'){
+        smoothTo('#about');
+        flashTarget('#about');
+      }
+    });
+  });
+
+  $('#menuBtn')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleQuickMenu();
+  });
+
+  document.addEventListener('click', (e) => {
+    const menu = $('#quickMenu');
+    const btn = $('#menuBtn');
+    if(!menu || !btn) return;
+    if(!menu.contains(e.target) && !btn.contains(e.target)) closeQuickMenu();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape') closeQuickMenu();
+    if((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'){
+      e.preventDefault();
+      markActiveNav('journal');
+      smoothTo('#app');
+      focusComposerWith('Reflect on the signal I should keep from this alternate path.');
+      flashTarget('.composer');
+    }
+  });
+
+  $$('[data-menu-action]').forEach(item => {
+    item.addEventListener('click', () => {
+      const action = item.dataset.menuAction;
+      closeQuickMenu();
+      if(action === 'start'){
+        markActiveNav('journal');
+        smoothTo('#app');
+        flashTarget('.app-shell');
+      }
+      if(action === 'sample'){
+        markActiveNav('journal');
+        loadExample();
+        flashTarget('.setup');
+      }
+      if(action === 'reflect'){
+        markActiveNav('journal');
+        smoothTo('#app');
+        if(stateJson) openLens('reflect');
+        else appendMessage('system', 'Invoke Road B first, then the Reflect room can open.', 'ROADB · waiting');
+      }
+      if(action === 'trace') exportTrace();
+    });
+  });
+
+  $('#startBtn')?.addEventListener('click', () => {
+    markActiveNav('journal');
+    smoothTo('#app');
+    flashTarget('.app-shell');
+  });
+  $('#sampleBtn')?.addEventListener('click', () => {
+    markActiveNav('journal');
+    loadExample();
+    flashTarget('.setup');
+  });
+  $('#invokeBtn')?.addEventListener('click', invokeOtherSelf);
+  $('#sendBtn')?.addEventListener('click', sendQuestion);
+  $('#saveBtn')?.addEventListener('click', saveCard);
+  $('#shareBtn')?.addEventListener('click', shareText);
+  $('#exportBtn')?.addEventListener('click', exportTrace);
+  $('#downloadCardBtn')?.addEventListener('click', saveCard);
+  $('#finalBtn')?.addEventListener('click', closeWithFinal);
+  document.querySelectorAll('[data-artifact]').forEach(el => {
+    el.addEventListener('click', () => openArtifact(el.dataset.artifact));
+  });
+  document.querySelectorAll('[data-lens]').forEach(el => {
+    el.addEventListener('click', () => {
+      const mode = el.dataset.lens;
+      markActiveNav(mode === 'discover' ? 'pathways' : 'journal');
+      if(mode === 'grow') closeWithFinal(); else openLens(mode);
+      smoothTo('#app');
+      flashTarget('.app-shell');
+    });
+  });
+  $('#composerInput')?.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' && !e.shiftKey){
+      e.preventDefault();
+      sendQuestion();
+    }
+  });
+
+  updateSidePanel();
+  getClient().catch(() => setStatus('client waiting'));
+</script>
+</body>
+</html>

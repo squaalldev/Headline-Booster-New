@@ -584,8 +584,11 @@ def build_app() -> gr.Blocks:
                     value=initial_history,
                     elem_id="chatbot",
                     show_label=False,
-                    height=290,
+                    height="40vh",
                     avatar_images=(None, None),
+                    buttons=[],
+                    feedback_options=None,
+                    layout="bubble",
                 )
                 with gr.Column(elem_classes="composer"):
                     with gr.Row(elem_classes="composer-row"):

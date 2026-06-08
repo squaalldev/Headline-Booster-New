@@ -33,3 +33,6 @@ The runtime app is still `app.py`. The visual layer lives in `frontend/styles.cs
 ## Future adaptation path
 
 If more of the reference app is needed, copy only reusable static assets into `frontend/assets/`, then translate the look into Gradio HTML/CSS. Do not reintroduce a separate React/Vite build or external API dependency for the first Headline Booster version.
+## CSS reference pass
+
+The Hugging Face `chatbot_mail` CSS reference was reviewed for its practical frontend justification: explicit component targeting, full-width sidebar buttons, compact button heights, clear hover states, constrained main content width, and stronger `!important` overrides where the framework injects styles. Headline Booster applies the same idea in `frontend/styles.css` while translating it from Streamlit selectors to Gradio selectors.

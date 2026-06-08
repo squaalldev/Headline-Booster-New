@@ -1,3 +1,13 @@
+---
+license: mit
+title: ' Headline-booster'
+sdk: gradio
+emoji: 💻
+colorFrom: yellow
+colorTo: yellow
+pinned: true
+sdk_version: 6.17.3
+---
 # Headline Booster
 
 Headline Booster is a small-model-ready Gradio chatbot that helps entrepreneurs create clearer, stronger headlines in seconds.

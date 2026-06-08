@@ -1,3 +1,14 @@
+---
+license: mit
+title: Headline Booster
+sdk: gradio
+emoji: 🏆
+colorFrom: yellow
+colorTo: red
+pinned: true
+short_description: Make titles with AI
+sdk_version: 6.16.0
+---
 # Headline Booster
 
 Headline Booster is a small-model-ready Gradio chatbot that helps entrepreneurs create clearer, stronger headlines in seconds.
@@ -24,11 +35,9 @@ python app.py
 - Built with Gradio
 - Designed for Hugging Face Spaces
 - Prepared for a small model under 32B parameters
-- Tiny Titan target model: Qwen/Qwen2.5-1.5B-Instruct
-- Quality fallback model: Qwen/Qwen2.5-3B-Instruct
-- Mock mode by default for local development
-- Real model mode via USE_REAL_MODEL=true
-- ZeroGPU integration prepared
+- Planned model: Qwen2.5-3B-Instruct
+- No external AI APIs in the first version
+- ZeroGPU integration planned
 
 ## Architecture
 
@@ -37,30 +46,10 @@ python app.py
 ├── app.py
 ├── requirements.txt
 ├── README.md
-├── frontend/
-│   ├── README.md
-│   └── styles.css
 └── docs/
     ├── CODEX_NOTES.md
     ├── COMMIT_LOG.md
-    ├── FIELD_NOTES.md
-    ├── FRONTEND_REFERENCE_NOTES.md
-    └── TINY_TITAN_PLAN.md
-```
-
-## Tiny Titan model mode
-
-The app defaults to mock mode so it can run locally without downloading a model. To enable the Tiny Titan model path in a Hugging Face Space, configure:
-
-```bash
-USE_REAL_MODEL=true
-MODEL_ID=Qwen/Qwen2.5-1.5B-Instruct
-```
-
-If the 1.5B model needs stronger copywriting quality, use the under-4B fallback:
-
-```bash
-MODEL_ID=Qwen/Qwen2.5-3B-Instruct
+    └── FIELD_NOTES.md
 ```
 
 ## Source code
@@ -71,4 +60,4 @@ GitHub repo: TODO
 
 This app was built with help from OpenAI Codex as a coding agent.
 
-Codex migration evidence is documented in `docs/CODEX_NOTES.md` and `docs/COMMIT_LOG.md`. Visual adaptation notes are documented in `docs/FRONTEND_REFERENCE_NOTES.md`.
+Codex migration evidence is documented in `docs/CODEX_NOTES.md` and `docs/COMMIT_LOG.md`.

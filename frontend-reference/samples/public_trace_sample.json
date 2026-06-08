@@ -1,0 +1,121 @@
+{
+  "trace_type": "road_b_public_synthetic_trace",
+  "app": "Road B: The Other Screen",
+  "version": "0.9.0",
+  "created_for": "Build Small Hackathon",
+  "synthetic": true,
+  "contains_real_user_data": false,
+  "privacy_note": "This is a synthetic public example. It is not from a real user session.",
+  "runtime": {
+    "model": "unsloth/Qwen3.5-9B-GGUF",
+    "model_file": "Qwen3.5-9B-Q4_K_M.gguf",
+    "runtime": "Modal GPU + llama.cpp via llama-cpp-python",
+    "hugging_face_space_role": "Gradio UI, session state, Echo Artifacts, trace export, souvenir card rendering",
+    "modal_role": "Qwen GGUF inference endpoint",
+    "mock_mode": false,
+    "third_party_model_api": false,
+    "cloud_gpu_compute": true
+  },
+  "session": {
+    "session_id": "echo-7c14-synthetic",
+    "universe_id": "RB-2018-09",
+    "signal_start": 92,
+    "signal_end": 18,
+    "echo_artifacts_required_for_final": 3,
+    "echo_artifacts_collected": 3,
+    "tone": [
+      "Warm",
+      "Reflective",
+      "Tender"
+    ],
+    "divergence": 0.62,
+    "honesty": 0.84
+  },
+  "input": {
+    "decision": "In 2018, I turned down a job offer in Berlin to stay in Tokyo and finish my PhD. I have wondered ever since.",
+    "road_a": "Stayed in Tokyo and finished the PhD.",
+    "road_b": "Took the Berlin job.",
+    "alternate_current_self": "Lives in Kreuzberg. Senior staff engineer at a climate-tech startup. Married a chef they met at a co-working space. Plays bass on Sundays."
+  },
+  "events": [
+    {
+      "step": 1,
+      "kind": "invoke_road_b",
+      "user_visible_action": "Tune the Other Screen",
+      "prompt_summary": "Create a fictional alternate self who took the Berlin path. Return an opening transmission, identity line, daily scene, gift, cost, insight, and question back.",
+      "model_output_summary": {
+        "other_name": "Berlin-You",
+        "opening_line": "The wind here cuts through your coat differently than Tokyo's humidity. You remember the subway tiles in Kreuzberg, the smell of coffee in your office, and the bass vibrating in your chest on Sundays. It is a different kind of quiet.",
+        "daily_scene": "You fix a server at 3 AM while the city hums below. Later, your wife cooks a stew that smells like home, though this home is new.",
+        "gift": "A wider map",
+        "cost": "A softer absence at family tables",
+        "question_back": "What did Tokyo protect in you that Berlin would have burned away?"
+      }
+    },
+    {
+      "step": 2,
+      "kind": "ask_other_self",
+      "user_message": "What did you give up that I still have?",
+      "model_output_summary": {
+        "answer": "I gave up the slow continuity of being known. Here, every friendship began with explanation. I had to translate not only language, but weather, jokes, grief, and why certain songs made me quiet.",
+        "question_back": "When you stayed, did you feel rooted, or simply easier to find?"
+      }
+    },
+    {
+      "step": 3,
+      "kind": "open_artifact",
+      "artifact_type": "cost_ledger",
+      "user_visible_action": "Open the Cost Ledger",
+      "model_output_summary": {
+        "title": "Cost Ledger",
+        "lines": [
+          "You missed the long illness slowly enough to be useful.",
+          "Your old friends became weather reports instead of voices.",
+          "You learned three languages for loneliness before you learned them for love."
+        ],
+        "question_back": "What did your chosen road protect that mine could not?"
+      }
+    },
+    {
+      "step": 4,
+      "kind": "open_artifact",
+      "artifact_type": "typical_tuesday",
+      "user_visible_action": "Visit a Tuesday",
+      "model_output_summary": {
+        "title": "A Typical Tuesday",
+        "body": "The office smells like rain-soaked wool and burnt espresso. By noon, you are arguing with a grid forecast. By evening, you are carrying bread home through Kreuzberg while someone plays trumpet badly above a kebab shop.",
+        "question_back": "What does an ordinary Tuesday in your life know that mine forgot?"
+      }
+    },
+    {
+      "step": 5,
+      "kind": "open_artifact",
+      "artifact_type": "unsent_letter",
+      "user_visible_action": "Read the Unsent Letter",
+      "model_output_summary": {
+        "title": "The Unsent Letter",
+        "body": "I used to think leaving would make me larger. It did, but not in the direction I expected. Some rooms opened. Some names became harder to say. I am not sorry. I am also not finished grieving.",
+        "question_back": "Which part of your life still writes to mine?"
+      }
+    },
+    {
+      "step": 6,
+      "kind": "final_transmission",
+      "user_visible_action": "Receive Final Transmission",
+      "model_output_summary": {
+        "title": "Final Transmission",
+        "final_message": "Do not worship my road. I still wonder about yours. We both paid for our maps. We both kept something alive.",
+        "gift": "A wider map",
+        "cost": "A quieter birthday table",
+        "last_line": "Every chosen life is haunted by the one that learned to live without it."
+      }
+    },
+    {
+      "step": 7,
+      "kind": "souvenir_card",
+      "user_visible_action": "Download Souvenir Card",
+      "summary": "The frontend rendered a visible SVG souvenir card using the session's real Road B content."
+    }
+  ],
+  "why_shared": "This trace shows how Road B frames a life fork, asks Qwen to inhabit a fictional alternate self, unlocks Echo Artifacts, and creates a final souvenir artifact without exposing private user data."
+}

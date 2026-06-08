@@ -1,13 +1,15 @@
 """Headline Booster: a small-model-ready Gradio chatbot for Spanish headlines.
 
-The current generation function is intentionally mocked so the Space does not
-require external AI APIs. Replace `generate_headlines_mock` with a local/ZeroGPU
-inference function when Qwen2.5-3B-Instruct is added.
+The app can run in mock mode by default or use a local Hugging Face model
+when USE_REAL_MODEL=true. The first Tiny Titan target is
+Qwen/Qwen2.5-1.5B-Instruct, with Qwen/Qwen2.5-3B-Instruct as the quality fallback.
 """
 
 from __future__ import annotations
 
+import os
 import re
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -93,6 +95,13 @@ STYLE_HEADLINES = {
 }
 
 CUSTOM_CSS = (Path(__file__).parent / "frontend" / "styles.css").read_text(encoding="utf-8")
+
+MODEL_ID = os.getenv("MODEL_ID", "Qwen/Qwen2.5-1.5B-Instruct")
+USE_REAL_MODEL = os.getenv("USE_REAL_MODEL", "false").lower() == "true"
+REAL_MODEL_MAX_NEW_TOKENS = int(os.getenv("MAX_NEW_TOKENS", "700"))
+RUNTIME_LABEL = "real model" if USE_REAL_MODEL else "mock mode"
+MODEL_BADGE = MODEL_ID.split("/")[-1] if USE_REAL_MODEL else "small-model ready"
+TINY_TITAN_TARGET = "Qwen/Qwen2.5-1.5B-Instruct"
 
 
 def _normalize(text: str) -> str:
@@ -236,7 +245,131 @@ El encabezado #2 es el más fuerte porque combina curiosidad, claridad y una pro
 
 Estos encabezados son {tone_note}: conectan la oferta con el resultado deseado y evitan explicar demasiado en la primera línea.
 
-_Nota técnica: esta es una generación mock. La función está preparada para reemplazarse por inferencia local con Qwen2.5-3B-Instruct y ZeroGPU._"""
+_Nota técnica: esta es una generación mock. Activa USE_REAL_MODEL=true para usar el modelo tiny configurado con MODEL_ID._"""
+
+
+def build_headline_prompt(user_message: str, style: str = "default") -> list[dict[str, str]]:
+    """Builds the constrained Spanish prompt used by the tiny model runtime."""
+    count = _extract_count(user_message)
+    style_instruction = {
+        "default": "claros, persuasivos y listos para usar",
+        "emotional": "más emocionales, conectados con el deseo interno de la audiencia",
+        "direct": "más directos, concretos y orientados a conversión",
+        "elegant": "más elegantes, sobrios y premium",
+        "curious": "más curiosos, con intriga y tensión",
+    }.get(style, STYLE_LABELS["default"])
+
+    system_prompt = """
+Eres Headline Booster, un asistente de copywriting en español.
+
+Tu única tarea es crear encabezados claros y persuasivos.
+No hagas diagnóstico.
+No hagas estrategia.
+No escribas emails.
+No agregues pasos extra.
+No pidas más datos si el usuario ya dio qué vende, para quién es, resultado deseado y cantidad.
+
+Devuelve siempre Markdown con este formato exacto:
+
+## Encabezados generados
+
+1. ...
+2. ...
+3. ...
+
+## Mi recomendación
+
+...
+
+## Por qué funciona
+
+...
+""".strip()
+
+    user_prompt = f"""
+Solicitud del usuario:
+{user_message}
+
+Estilo solicitado:
+{style_instruction}
+
+Cantidad de encabezados solicitada:
+{count}
+
+Genera exactamente {count} encabezados en español.
+""".strip()
+
+    return [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt},
+    ]
+
+
+@lru_cache(maxsize=1)
+def get_tiny_model():
+    """Loads the configured Hugging Face model once per Space process."""
+    import torch
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
+    model = AutoModelForCausalLM.from_pretrained(
+        MODEL_ID,
+        torch_dtype="auto",
+        device_map="auto",
+    )
+    if tokenizer.pad_token_id is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    return tokenizer, model
+
+
+def _zerogpu_enabled(func):
+    """Applies the ZeroGPU decorator only when the real model runtime is enabled."""
+    if USE_REAL_MODEL:
+        import spaces
+
+        return spaces.GPU(duration=90)(func)
+    return func
+
+
+@_zerogpu_enabled
+def generate_headlines_model(user_message: str, style: str = "default") -> str:
+    """Generates headlines with the configured tiny local model."""
+    import torch
+
+    tokenizer, model = get_tiny_model()
+    messages = build_headline_prompt(user_message, style)
+    prompt = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True,
+    )
+    inputs = tokenizer([prompt], return_tensors="pt")
+    device = next(model.parameters()).device
+    inputs = {key: value.to(device) for key, value in inputs.items()}
+
+    with torch.no_grad():
+        outputs = model.generate(
+            **inputs,
+            max_new_tokens=REAL_MODEL_MAX_NEW_TOKENS,
+            temperature=0.72,
+            top_p=0.9,
+            do_sample=True,
+            repetition_penalty=1.08,
+            pad_token_id=tokenizer.eos_token_id,
+        )
+
+    generated_tokens = outputs[0][inputs["input_ids"].shape[-1] :]
+    generated_text = tokenizer.decode(generated_tokens, skip_special_tokens=True).strip()
+    if not generated_text:
+        return generate_headlines_mock(user_message, style)
+    return generated_text
+
+
+def generate_headlines(user_message: str, style: str = "default") -> str:
+    """Routes generation to the real tiny model or the local mock fallback."""
+    if USE_REAL_MODEL:
+        return generate_headlines_model(user_message, style)
+    return generate_headlines_mock(user_message, style)
 
 
 def _last_complete_user_request(history: list[dict[str, Any]]) -> str:
@@ -250,8 +383,8 @@ def chat_response(message, history):
     """
     Maneja la conversación.
     Si falta información, pide solo 4 datos.
-    Si hay información suficiente, genera encabezados mock.
-    Si el usuario pide ajuste de tono, genera una nueva versión mock.
+    Si hay información suficiente, genera encabezados con el modelo configurado o fallback mock.
+    Si el usuario pide ajuste de tono, genera una nueva versión con el mismo runtime.
     """
     history = history or []
     clean_message = (message or "").strip()
@@ -263,9 +396,9 @@ def chat_response(message, history):
     is_style_adjustment = style != "default" and previous_request and not is_request_complete(clean_message)
 
     if is_style_adjustment:
-        bot_message = generate_headlines_mock(previous_request, style=style)
+        bot_message = generate_headlines(previous_request, style=style)
     elif is_request_complete(clean_message):
-        bot_message = generate_headlines_mock(clean_message, style=style)
+        bot_message = generate_headlines(clean_message, style=style)
     else:
         bot_message = MISSING_INFO_MESSAGE
 
@@ -300,12 +433,12 @@ def build_app() -> gr.Blocks:
                     )
                     new_chat = gr.Button("+ Nueva conversación", elem_id="new-chat", size="lg")
                     gr.HTML(
-                        """
+                        f"""
                         <div class="signal-panel">
                           <div class="signal-label">Signal controls</div>
                           <div class="signal-row">
-                            <span class="signal-pill">mock mode</span>
-                            <span class="signal-pill">small-model ready</span>
+                            <span class="signal-pill">{RUNTIME_LABEL}</span>
+                            <span class="signal-pill">{MODEL_BADGE}</span>
                           </div>
                           <div class="signal-meter"><div class="signal-fill"></div></div>
                         </div>
@@ -338,7 +471,7 @@ def build_app() -> gr.Blocks:
                         """
                     )
                     welcome = gr.HTML(
-                        """
+                        f"""
                         <section id="welcome-hero">
                           <div class="hero-kicker">portal de encabezados · 01</div>
                           <div class="portal-avatar" aria-label="Booster avatar"></div>
@@ -352,8 +485,8 @@ def build_app() -> gr.Blocks:
                           </div>
                           <div class="metric-grid">
                             <div class="metric-card"><strong>4 datos</strong><span>sin formularios largos</span></div>
-                            <div class="metric-card"><strong>10 ideas</strong><span>mock editable</span></div>
-                            <div class="metric-card"><strong>3B plan</strong><span>Qwen2.5 futuro</span></div>
+                            <div class="metric-card"><strong>10 ideas</strong><span>{RUNTIME_LABEL}</span></div>
+                            <div class="metric-card"><strong>1.5B target</strong><span>Tiny Titan</span></div>
                           </div>
                         </section>
                         """,
@@ -377,7 +510,7 @@ def build_app() -> gr.Blocks:
                                 scale=8,
                             )
                             send = gr.Button("Enviar", elem_id="send-btn", variant="primary", scale=1)
-                        gr.HTML('<div class="helper-text"><span>Presiona Enter para enviar · Shift+Enter para nueva línea</span><span class="runtime-note">gradio · mock · sin API externa</span></div>')
+                        gr.HTML(f'<div class="helper-text"><span>Presiona Enter para enviar · Shift+Enter para nueva línea</span><span class="runtime-note">gradio · {RUNTIME_LABEL} · sin API externa</span></div>')
 
         message.submit(
             chat_response,

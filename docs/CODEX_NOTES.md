@@ -29,23 +29,24 @@ The useful visual ideas were the left sidebar, central chat area, soft brown pal
 
 - `app.py`: new Gradio Blocks application with sidebar, chat UI, mock headline generation, style adjustment detection, and reset behavior.
 - `frontend/styles.css`: custom visual layer for the Gradio interface, kept separate from Python so the frontend can be adjusted without reintroducing React/Vite.
-- `requirements.txt`: simplified to the minimum Gradio dependency.
+- `requirements.txt`: includes Gradio plus optional Tiny Titan runtime dependencies for Transformers and ZeroGPU.
 - `README.md`: rewritten for Headline Booster and hackathon alignment.
 - `docs/CODEX_NOTES.md`: documents repository analysis and migration decisions.
 - `docs/FIELD_NOTES.md`: documents product problem, small-model angle, and future work.
 - `docs/COMMIT_LOG.md`: records the relevant Git commits for hackathon/Codex review.
 - `docs/FRONTEND_REFERENCE_NOTES.md`: explains how the Road B frontend reference was used as visual inspiration without copying product logic.
+- `docs/TINY_TITAN_PLAN.md`: documents the Qwen2.5-1.5B real-model path and fallback plan.
 
 ## Current status
 
-Headline Booster is now a simple Gradio app that can run with `python app.py`. It does not call external AI APIs. It asks for only four data points when input is incomplete and returns mock Spanish headline options when the request is complete.
+Headline Booster is now a simple Gradio app that can run with `python app.py`. It defaults to mock mode and can switch to a local Hugging Face model with `USE_REAL_MODEL=true`. It asks for only four data points when input is incomplete and returns Spanish headline options when the request is complete.
 
 ## Next steps
 
 - Deploy the repository as a Hugging Face Space.
-- Replace the mock generator with a local inference function.
+- Test the `USE_REAL_MODEL=true` path on Hugging Face ZeroGPU.
 - Add light manual tests for Spanish headline quality and tone adjustment behavior.
 
 ## Planned model integration
 
-The planned model is `Qwen2.5-3B-Instruct`, which is under the 32B parameter limit. The mock function in `app.py` is intentionally isolated so it can be replaced with ZeroGPU-backed inference without changing the UI flow.
+The Tiny Titan target is `Qwen/Qwen2.5-1.5B-Instruct`, with `Qwen/Qwen2.5-3B-Instruct` as the quality fallback. Both keep Headline Booster under the hackathon tiny-model direction while preserving a mock fallback for local development.
